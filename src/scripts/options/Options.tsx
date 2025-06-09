@@ -12,8 +12,14 @@ const Options = () => {
   const [folderSort, setFolderSort] = useState('name_ascending');
 
   useEffect(() => {
-    getStorageItem('host').then(setHost);
-    getStorageItem('token').then(setToken);
+    getStorageItem('host').then((value) => {
+      if(value)
+        setHost(value);
+    });
+    getStorageItem('token').then((value) => {
+      if(value)
+        setToken(value);
+    });
     getStorageItem('sort_links').then((value) => {
       if(value) {
         setLinkSort(value);
