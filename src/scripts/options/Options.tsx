@@ -1,23 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, Save, RefreshCw } from 'lucide-react';
+import { getBrowser, getStorageItem, setStorageItem } from '../utils/utils';
 
 const Options = () => {
   const [host, setHost] = useState('');
   const [token, setToken] = useState('');
-  const [refreshInterval, setRefreshInterval] = useState(30);
   const [status, setStatus] = useState('');
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showToken, setShowToken] = useState(false);
+  const [linkSort, setLinkSort] = useState('name_ascending');
+  const [folderSort, setFolderSort] = useState('name_ascending');
 
   useEffect(() => {
-    chrome.storage.sync.get(
-      ['host', 'token', 'refreshInterval'],
-      function (items) {
-        setHost(items.host || '');
-        setToken(items.token || '');
-        setRefreshInterval(items.refreshInterval || 30);
-      },
-    );
+    getStorageItem('host').then(setHost);
+    getStorageItem('token').then(setToken);
+    getStorageItem('sort_links').then((value) => {
+      if(value) {
+        setLinkSort(value);
+      }
+    });
+    getStorageItem('sort_folders').then((value) => {
+      if(value) {
+        setFolderSort(value);
+      }
+    });
 
     const darkModeMediaQuery = window.matchMedia(
       '(prefers-color-scheme: dark)',
@@ -25,28 +31,44 @@ const Options = () => {
     setIsDarkMode(darkModeMediaQuery.matches);
 
     const listener = (e) => setIsDarkMode(e.matches);
-    darkModeMediaQuery.addListener(listener);
+    darkModeMediaQuery.addEventListener('change', listener);
 
-    return () => darkModeMediaQuery.removeListener(listener);
+    return () => darkModeMediaQuery.removeEventListener('change', listener);
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    chrome.storage.sync.set({ host, token, refreshInterval }, function () {
+
+    setStorageItem('host', host).then(() =>
+      setStorageItem('token', token))
+    .then(() =>
+      setStorageItem('sort_links', linkSort))
+    .then(() =>
+      setStorageItem('sort_folders', folderSort))
+    .then(() =>
+      getBrowser().runtime.sendMessage({action: 'reload'})
+    ).then(() => {
       setStatus('Options saved successfully.');
       setTimeout(() => setStatus(''), 3000);
-      chrome.alarms.create('refreshData', { periodInMinutes: refreshInterval });
     });
   };
 
   const handleRefresh = () => {
     setStatus('Refreshing data...');
-    chrome.runtime.sendMessage({ action: 'refreshData' }, function (response) {
-      if (response) {
-        setStatus('Data refreshed successfully.');
-      } else {
-        setStatus('Error refreshing data. Please check your settings.');
+    getBrowser().runtime.sendMessage({action: 'fetchAllLinksFromAllFolders'}).then((links) => {
+      console.log(links);
+      if(links) {
+        setStorageItem('linksByFolder', links);
       }
+      return getBrowser().runtime.sendMessage({action: 'fetchFolders'});
+    }).then((folders) => {
+      if(folders) {
+          setStorageItem('allFolders', folders);
+        }
+      setStatus('Data refreshed successfully.')
+      setTimeout(() => setStatus(''), 3000);
+    }).catch(() => {
+      setStatus('Error refreshing data. Please check your settings.');
       setTimeout(() => setStatus(''), 3000);
     });
   };
@@ -127,20 +149,51 @@ const Options = () => {
             </div>
             <div>
               <label
-                htmlFor="refreshInterval"
+                htmlFor="linkSort"
                 className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
               >
-                Refresh Interval (minutes)
+                Sort Links
               </label>
-              <input
-                type="number"
-                id="refreshInterval"
-                value={refreshInterval}
-                onChange={(e) => setRefreshInterval(Number(e.target.value))}
-                min="1"
-                required
-                className={inputClass}
-              />
+              <select
+                name="linkSort"
+                id="linkSort"
+                value={linkSort}
+                onChange={(e) => {setLinkSort(e.target.value)}}
+                className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  isDarkMode
+                    ? 'bg-gray-700 border-gray-600 text-white'
+                    : 'bg-white border-gray-300 text-black'
+                }`}
+              >
+                <option key="name_ascending" value="name_ascending">Name Ascending</option>
+                <option key="name_descending" value="name_descending">Name Descending</option>
+                <option key="date_ascending" value="date_ascending">Date Ascending</option>
+                <option key="date_descending" value="date_descending">Date Descending</option>
+              </select>
+            </div>
+            <div>
+              <label
+                htmlFor="folderSort"
+                className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+              >
+                Sort Folders
+              </label>
+              <select
+                name="folderSort"
+                id="folderSort"
+                value={folderSort}
+                onChange={(e) => {setFolderSort(e.target.value)}}
+                className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  isDarkMode
+                    ? 'bg-gray-700 border-gray-600 text-white'
+                    : 'bg-white border-gray-300 text-black'
+                }`}
+              >
+                <option key="name_ascending" value="name_ascending">Name Ascending</option>
+                <option key="name_descending" value="name_descending">Name Descending</option>
+                <option key="date_ascending" value="date_ascending">Date Ascending</option>
+                <option key="date_descending" value="date_descending">Date Descending</option>
+              </select>
             </div>
             <div className="flex space-x-4 pt-4">
               <button

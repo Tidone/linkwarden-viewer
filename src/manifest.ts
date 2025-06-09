@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 
-interface Manifest {
+interface ManifestChrome {
   manifest_version: number;
   name: string;
   version: string;
@@ -44,7 +44,42 @@ interface Manifest {
   };
 }
 
-const createBaseManifest = async (): Promise<Manifest> => {
+interface ManifestFirefox {
+  manifest_version: number;
+  name: string;
+  version: string;
+  description: string;
+  homepage_url: string;
+  browser_action: {
+    default_popup: string;
+    default_icon: {
+      [key: number]: string;
+    }
+    default_title: string;
+  };
+  options_ui: {
+    page: string;
+    browser_style: boolean;
+    open_in_tab: boolean;
+  };
+  icons: {
+    [key: number]: string;
+  };
+  permissions: string[];
+  background: {
+    scripts: string[];
+    persistent: boolean;
+    type: string;
+  };
+  browser_specific_settings: {
+    gecko: {
+      id: string;
+      strict_min_version: string;
+    }
+  }
+}
+
+const createBaseChromeManifest = async (): Promise<ManifestChrome> => {
   try {
     const pkg = await fs.readJSON('package.json');
 
@@ -86,15 +121,74 @@ const createBaseManifest = async (): Promise<Manifest> => {
       },
     };
   } catch (error) {
-    console.error('Error reading package.json:', error);
+    console.error('Error reading package.json: ', error);
     throw error;
   }
 };
 
-const getManifest = async (resources: string[]): Promise<Manifest> => {
+const createBaseFirefoxManifest = async (): Promise<ManifestFirefox> => {
   try {
-    const baseManifest = await createBaseManifest();
+    const pkg = await fs.readJSON('package.json');
+
     return {
+      manifest_version: 2,
+      name: pkg.longName ?? pkg.name ?? 'GIVE ME A NAME',
+      version: pkg.version,
+      description: pkg.description ?? 'GIVE ME A DESCRIPTION',
+      homepage_url: 'https://github.com/Tidone/linkwarden-viewer-chrome',
+      browser_action: {
+        default_popup: './src/scripts/popup/popup.html',
+        default_icon: {
+          16: './assets/icon-16.png',
+          48: './assets/icon-48.png',
+          128: './assets/icon-128.png',
+        },
+        default_title: pkg.longName ?? pkg.name ?? 'GIVE ME A NAME',
+      },
+      options_ui: {
+        page: './src/scripts/options/options.html',
+        browser_style: false,
+        open_in_tab: true,
+      },
+      background: {
+        scripts: ['js/service-worker.js'],
+        persistent: true,
+        type: 'module',
+      },
+      icons: {
+        16: './assets/icon-16.png',
+        48: './assets/icon-48.png',
+        128: './assets/icon-128.png',
+      },
+      permissions: [
+        'storage',
+        'activeTab',
+        'tabs',
+        '<all_urls>',
+        'webRequest',
+        'http://*/*',
+        'https://*/*'
+      ],
+      browser_specific_settings: {
+        gecko: {
+          id: "linkwarden_viewer@tidone.at",
+          strict_min_version: "109.0"
+        }
+      }
+    };
+  } catch (error) {
+    console.error('Error reading package.json: ', error);
+    throw error;
+  }
+};
+
+const getManifest = async (resources: string[]): Promise<ManifestChrome | ManifestFirefox> => {
+  try {
+    const target = process.env.TARGET_BROWSER;
+
+    if (target === 'CHROME') {
+      const baseManifest = await createBaseChromeManifest();
+      return {
       ...baseManifest,
       web_accessible_resources: [
         {
@@ -103,8 +197,16 @@ const getManifest = async (resources: string[]): Promise<Manifest> => {
         },
       ],
     };
+    } else if (target === 'FIREFOX') {
+      return await createBaseFirefoxManifest();
+    } else {
+      console.error('Error creating manifest: No target browser specified');
+      throw 'No target browser specified';
+    }
+
+
   } catch (error) {
-    console.error('Error creating manifest:', error);
+    console.error('Error creating manifest: ', error);
     throw error;
   }
 };
@@ -116,7 +218,7 @@ const readJsFiles = async (dir: string): Promise<string[]> => {
       .filter((file: string) => path.extname(file) === '.js')
       .map((file: string) => path.join(dir, file));
   } catch (error) {
-    console.error(`Error reading JS files from ${dir}:`, error);
+    console.error(`Error reading JS files from ${dir}: `, error);
     throw error;
   }
 };
@@ -130,6 +232,7 @@ export const writeManifest = async (): Promise<void> => {
 
     fs.writeFileSync('dist/manifest.json', JSON.stringify(manifest, null, 2));
   } catch (error) {
-    console.error('Issue writing manifest.json:', error);
+    console.error('Issue writing manifest.json: ', error);
+    throw error;
   }
 };

@@ -22,10 +22,6 @@ const config = defineConfig({
     },
 
     build: {
-        watch: {
-            include: ['./src/**/*']
-        },
-
         outDir: r('dist/js'),
         cssCodeSplit: false,
         emptyOutDir: false,

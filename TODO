@@ -1,0 +1,4 @@
+- Make whole Link field clickable
+- Handle case where there are no folders
+  -> Add new link does not open (Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'id'))
+  -> Create a new folder in that case

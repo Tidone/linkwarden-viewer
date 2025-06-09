@@ -1,91 +1,70 @@
 import { LinkwardenService } from './linkwarden-service';
+import { getBrowser, getStorageItems } from '../utils/utils';
 
 let host: string;
 let token: string;
 
 console.log('Background Service Worker Loaded');
 
-chrome.runtime.onInstalled.addListener(async () => {
-  console.log('Extension installed');
+getStorageItems(['host', 'token']).then((result) => {
+  host = result.host;
+  token = result.token;
 });
 
-chrome.action.setBadgeText({ text: 'ON' });
 
-chrome.action.onClicked.addListener(() => {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const activeTab = tabs[0];
-    chrome.tabs.sendMessage(activeTab.id!, {
-      message: 'clicked_browser_action',
-    });
-  });
-});
-
-chrome.commands.onCommand.addListener((command) => {
-  console.log(`Command: ${command}`);
-
-  if (command === 'refresh_extension') {
-    chrome.runtime.reload();
-  }
-});
-
-chrome.storage.sync.get(
-  ['host', 'token', 'refreshInterval'],
-  function (result) {
-    host = result.host;
-    token = result.token;
-
-    if (result.refreshInterval) {
-      chrome.alarms.create('refreshData', {
-        periodInMinutes: parseInt(result.refreshInterval),
-      });
-    }
-  },
-);
-
-chrome.alarms.onAlarm.addListener(function (alarm) {
-  if (alarm.name === 'refreshData') {
-    const service = new LinkwardenService(host, token);
-    service.fetchFolders();
-  }
-});
-
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  const service = new LinkwardenService(host, token);
-
+getBrowser().runtime.onMessage.addListener(function (request, sender, sendResponse) {
   console.log('Message received:', request);
-  if (request.action === 'checkOptions') {
+
+  if (request.action === 'hasValidConfiguration') {
     sendResponse(!!host && !!token);
-  } else if (request.action === 'getFolders') {
-    chrome.storage.local.get('folders', function (result) {
-      if (result.folders) {
-        sendResponse(result.folders);
-      } else {
-        service.fetchFolders().then(sendResponse);
-      }
+    return false;
+  } else if (request.action === 'reload') {
+    getStorageItems(['host', 'token']).then((result) => {
+      host = result.host;
+      token = result.token;
     });
+    return false;
+  }
+
+  if(!host || !token)
+  {
+    console.warn('Tried to call Linkwarden API with invalid credentials');
+    return false;
+  }
+
+  let service = new LinkwardenService(host, token);
+  if (request.action === 'fetchAllLinksFromAllFolders') {
+    service.fetchAllLinksFromAllFolders().then(sendResponse);
     return true;
-  } else if (request.action === 'getLinks') {
-    service.fetchLinks(request.collectionId).then(sendResponse);
-    return true;
-  } else if (request.action === 'refreshData') {
+  } else if (request.action === 'fetchFolders') {
     service.fetchFolders().then(sendResponse);
     return true;
-  } else if (request.action === 'getTags') {
+  } else if (request.action === 'fetchLinks') {
+    service.fetchLinks(request.collectionId).then(sendResponse);
+    return true;
+  } else if (request.action === 'fetchTags') {
     service.fetchTags().then(sendResponse);
     return true;
   } else if (request.action === 'saveLink') {
     service.saveLink(request.link).then(sendResponse);
     return true;
-  } else if (request.action === 'getAllLinks') {
-    service.fetchAllLinksFromFolders().then(sendResponse);
-    return true;
   } else if (request.action === 'updateLink') {
-    service.updateLink(request.id, request.data).then(sendResponse);
+    service.updateLink(request.data, request.collectionOwnerId).then(sendResponse);
     return true;
   } else if (request.action === 'deleteLink') {
     service.deleteLink(request.id).then(sendResponse);
     return true;
+  } else if (request.action === 'createFolder') {
+    service.createFolder(request.name, request.parentId).then(sendResponse);
+    return true;
+  } else if (request.action === 'updateFolder') {
+    service.updateFolder(request.id, request.name, request.parentId).then(sendResponse);
+    return true;
+  } else if (request.action === 'deleteFolder') {
+    service.deleteFolder(request.id).then(sendResponse);
+    return true;
   }
+  return false;
 });
 
 export {};
