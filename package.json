@@ -27,7 +27,6 @@
         "@types/node": "^20.4.1",
         "@types/react": "^18.2.14",
         "@types/react-dom": "^18.2.6",
-        "@types/webextension-polyfill": "^0.10.1",
         "@vitejs/plugin-react": "^4.0.3",
         "autoprefixer": "^10.4.14",
         "concurrently": "^8.2.0",
@@ -45,9 +44,7 @@
         "unplugin-auto-import": "^0.16.6",
         "vite": "^4.4.3",
         "vite-plugin-static-copy": "^0.16.0",
-        "webext-bridge": "^6.0.1",
-        "webextension-polyfill": "^0.10.0",
-        "webextension-polyfill-ts": "^0.26.0"
+        "webext-bridge": "^6.0.1"
     },
     "dependencies": {
         "lucide-react": "^0.451.0"
