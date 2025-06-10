@@ -3,7 +3,7 @@ import { LinkItem } from './LinkItem';
 
 interface Props {
   links: Link[];
-  refreshData: () => void;
+  loadLinksForFolder: (id: number) => void;
   isDarkMode: boolean;
   sortLinks: string;
   showEditLinkModal: (link: NewLink) => void;
@@ -13,7 +13,7 @@ interface Props {
 
 export const SearchResults = ({
   links,
-  refreshData,
+  loadLinksForFolder,
   isDarkMode,
   sortLinks,
   showEditLinkModal,
@@ -38,7 +38,7 @@ export const SearchResults = ({
           key={link.id}
           link={link}
           showCollectionName={true}
-          refreshData={refreshData}
+          refreshData={() => loadLinksForFolder(link.folder.id)}
           isDarkMode={isDarkMode}
           showEditLinkModal={showEditLinkModal}
           canShowOverlayButtons={canShowOverlayButtons}

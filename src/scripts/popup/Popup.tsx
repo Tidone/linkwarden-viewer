@@ -122,13 +122,13 @@ const Popup = () => {
 
   const openAddLinkModal = useCallback(() => {
     getCurrentTabInfo().then((tabinfo) => {
-      const uncategorized = folders.find(
+      const unorganized = folders.find(
         (folder) => folder.name === 'Unorganized',
       );
       setNewLink({
         url: tabinfo.url,
         title: tabinfo.title || '',
-        collectionId: uncategorized ? uncategorized.id : folders[0].id, //TODO test what happens if all folders are deleted
+        collectionId: unorganized ? unorganized.id : folders[0]?.id ?? 0,
         tags: [],
         id: 0,
       });
@@ -153,9 +153,6 @@ const Popup = () => {
       setAllTags(tags);
       setShowAddFolderModal(true);
     });
-  }, []);
-
-  const refreshData = useCallback(() => {
   }, []);
 
   const loadLinksForFolder = useCallback((folderId: number) => {
@@ -259,7 +256,11 @@ const Popup = () => {
     getBrowser().runtime.sendMessage({action: 'saveLink', link: newLink}).then((result) => {
       if (result.success) {
           closeAddLinkModal();
-          loadLinksForFolder(newLink.collectionId);
+          if(newLink.collectionId > 0) {
+            loadLinksForFolder(newLink.collectionId);
+          } else {
+            loadAllLinks();
+          }
         } else {
           alert('Error saving link. Please try again.');
         }
@@ -406,7 +407,7 @@ const Popup = () => {
           {searchQuery ? (
             <SearchResults
               links={filteredLinks}
-              refreshData={refreshData}
+              loadLinksForFolder={loadLinksForFolder}
               isDarkMode={isDarkMode}
               sortLinks={linkSort}
               showEditLinkModal={openEditLinkModal}

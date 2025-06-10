@@ -131,14 +131,14 @@ export const LinkItem = ({
               collectionId: link.folder.id,
               tags: link.tags.map((tag) => tag.name),
             })}
-            className="text-gray-400 hover:text-blue-500 opacity-0 group-hover:opacity-80 transition-opacity duration-200"
+            className={`text-gray-400 ${isDarkMode ? 'bg-gray-800/90' : 'bg-white/90'} hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200`}
             title="Edit link"
           >
             <Edit3 size={24} />
           </button>
             <button
               onClick={handleDelete}
-              className="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-80 transition-opacity duration-200"
+              className={`text-gray-400 ${isDarkMode ? 'bg-gray-800/90' : 'bg-white/90'} hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200`}
               title="Delete link"
             >
               <Trash2 size={24} />
