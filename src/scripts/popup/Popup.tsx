@@ -39,6 +39,7 @@ const Popup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [linkSort, setLinkSort] = useState("name_ascending");
   const [folderSort, setFolderSort] = useState("name_ascending");
+  const [openLinksInNewTab, setOpenLinksInNewTab] = useState(false);
   const updateInterval = 60000; //update links for open folders every 60 seconds if the popup is open
 
   const loadAllLinks = useCallback(() => {
@@ -68,14 +69,15 @@ const Popup = () => {
 
     getBrowser().runtime.sendMessage({action: 'hasValidConfiguration'}).then(setHasValidConfiguration);
 
-    getStorageItem('sort_links').then(setLinkSort);
-    getStorageItem('sort_folders').then(setFolderSort);
+    getStorageItem('sortLinks').then(setLinkSort);
+    getStorageItem('sortFolders').then(setFolderSort);
     getStorageItem('openFolders').then((openFoldersTemp) => {
       console.log("Open Folders: " + JSON.stringify(openFoldersTemp));
       if(openFoldersTemp) {
         setOpenFolders(new Set(openFoldersTemp));
       }
     });
+    getStorageItem('openNewTab').then(setOpenLinksInNewTab);
 
     getStorageItem('linksByFolder').then((linksByFolderTemp) => {
       if(linksByFolderTemp) {
@@ -409,6 +411,7 @@ const Popup = () => {
               sortLinks={linkSort}
               showEditLinkModal={openEditLinkModal}
               canShowOverlayButtons={!isAnyModalShown}
+              openLinksInNewTab={openLinksInNewTab}
             />
           ) : (
             <FolderStructure
@@ -424,6 +427,7 @@ const Popup = () => {
               showEditFolderModal={openEditFolderModal}
               showDeleteFolderModal={openDeleteFolderModal}
               canShowOverlayButtons={!isAnyModalShown}
+              openLinksInNewTab={openLinksInNewTab}
             />
           )}
         </div>

@@ -1,6 +1,6 @@
 import { getBrowser } from '@/scripts/utils/utils';
 import { Edit3, LinkIcon, Trash2 } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { MouseEventHandler, useState } from 'react';
 
 interface Props {
   link: Link;
@@ -8,8 +8,15 @@ interface Props {
   isDarkMode: boolean;
   showEditLinkModal: (link: NewLink) => void;
   canShowOverlayButtons: boolean;
+  openLinksInNewTab: boolean;
   showCollectionName?: boolean;
 }
+
+const MouseButtons = {
+  LEFT: 0,
+  MIDDLE: 1,
+  RIGHT: 2
+};
 
 export const LinkItem = ({
   link,
@@ -17,6 +24,7 @@ export const LinkItem = ({
   isDarkMode,
   showEditLinkModal,
   canShowOverlayButtons,
+  openLinksInNewTab,
   showCollectionName = false,
 }: Props) => {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -42,6 +50,25 @@ export const LinkItem = ({
 
   const tagsTexts = link.tags.map((tag) => tag.name).join(', ');
 
+  const onMouseUp: MouseEventHandler<HTMLDivElement> = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (!event.target || event.detail > 1) {
+      return;
+    }
+    event.preventDefault();
+
+    switch(event.button) {
+      case MouseButtons.LEFT:
+        if(event.ctrlKey || event.metaKey || openLinksInNewTab) {
+          getBrowser().tabs.create({'url': link.url});
+        } else {
+          getBrowser().tabs.update({'url': link.url});
+        }
+        break;
+      case MouseButtons.MIDDLE:
+        getBrowser().tabs.create({'url': link.url});
+        break;
+    }
+  }
 
   return (
     <div
@@ -49,31 +76,23 @@ export const LinkItem = ({
         isDarkMode ? 'bg-gray-800' : 'bg-white'
       }`}
     >
-      <div className="flex items-center space-x-1">
-        <img src={`https://icons.duckduckgo.com/ip3/${new URL(link.url).hostname}.ico`} width={16} height={16} loading='lazy' />
-        <a
-          href={link.url}
-          target="_blank"
-          title={link.name}
-          rel="noopener noreferrer"
-          className={`hover:underline flex-grow truncate ${
-            isDarkMode ? 'text-blue-400' : 'text-blue-600'
-          }`}
-        >
+      <div className='cursor-pointer' onMouseUp={onMouseUp}>
+        <div className="flex items-center space-x-1">
+          <img src={`https://icons.duckduckgo.com/ip3/${new URL(link.url).hostname}.ico`} width={16} height={16} loading='lazy' />
           {link.name}
-        </a>
-      </div>
-      <div className="flex justify-between mt-1 text-xs text-gray-500">
-        <span title={link.url} className="truncate max-w-[60%]">{link.url}</span>
-        {link.tags && link.tags.length > 0 && (
-          <span title={tagsTexts} className="truncate max-w-[40%] text-right">
-            {tagsTexts}
-          </span>
+        </div>
+        <div className="flex justify-between mt-1 text-xs text-gray-500">
+          <span title={link.url} className="truncate max-w-[60%]">{link.url}</span>
+          {link.tags && link.tags.length > 0 && (
+            <span title={tagsTexts} className="truncate max-w-[40%] text-right">
+              {tagsTexts}
+            </span>
+          )}
+        </div>
+        {showCollectionName && (
+          <div className="text-xs text-gray-400 ">{link.folder.name}</div>
         )}
       </div>
-      {showCollectionName && (
-        <div className="text-xs text-gray-400 ">{link.folder.name}</div>
-      )}
       {showConfirmDelete && (
         <div
           className={`absolute inset-0 ${

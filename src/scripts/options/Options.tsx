@@ -10,6 +10,7 @@ const Options = () => {
   const [showToken, setShowToken] = useState(false);
   const [linkSort, setLinkSort] = useState('name_ascending');
   const [folderSort, setFolderSort] = useState('name_ascending');
+  const [openLinksInNewTab, setOpenLinksInNewTab] = useState(false);
 
   useEffect(() => {
     getStorageItem('host').then((value) => {
@@ -20,14 +21,19 @@ const Options = () => {
       if(value)
         setToken(value);
     });
-    getStorageItem('sort_links').then((value) => {
+    getStorageItem('sortLinks').then((value) => {
       if(value) {
         setLinkSort(value);
       }
     });
-    getStorageItem('sort_folders').then((value) => {
+    getStorageItem('sortFolders').then((value) => {
       if(value) {
         setFolderSort(value);
+      }
+    });
+    getStorageItem('openNewTab').then((value) => {
+      if(value) {
+        setOpenLinksInNewTab(value);
       }
     });
 
@@ -48,9 +54,11 @@ const Options = () => {
     setStorageItem('host', host).then(() =>
       setStorageItem('token', token))
     .then(() =>
-      setStorageItem('sort_links', linkSort))
+      setStorageItem('sortLinks', linkSort))
     .then(() =>
-      setStorageItem('sort_folders', folderSort))
+      setStorageItem('sortFolders', folderSort))
+    .then(() =>
+      setStorageItem('openNewTab', openLinksInNewTab))
     .then(() =>
       getBrowser().runtime.sendMessage({action: 'reload'})
     ).then(() => {
@@ -200,6 +208,20 @@ const Options = () => {
                 <option key="date_ascending" value="date_ascending">Date Ascending</option>
                 <option key="date_descending" value="date_descending">Date Descending</option>
               </select>
+            </div>
+            <div className='flex space-x-4 pt-4'>
+              <input
+                type='checkbox'
+                id='openLinksInNewTab'
+                checked={openLinksInNewTab}
+                onChange={(event) => setOpenLinksInNewTab(event.target.checked)}
+              />
+              <label
+                htmlFor='openLinksInNewTab'
+                className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+              >
+                Always open Links in new Tabs
+              </label>
             </div>
             <div className="flex space-x-4 pt-4">
               <button

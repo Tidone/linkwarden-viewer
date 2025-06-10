@@ -104,7 +104,7 @@ const createBaseChromeManifest = async (): Promise<ManifestChrome> => {
         48: './assets/icon-48.png',
         128: './assets/icon-128.png',
       },
-      permissions: ['webRequest', 'storage', 'alarms', 'tabs'],
+      permissions: ['webRequest', 'storage', 'alarms', 'tabs', 'activeTab'],
       content_scripts: [
         {
           matches: ['<all_urls>'],

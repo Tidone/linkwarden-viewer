@@ -16,6 +16,7 @@ interface Props {
   showEditFolderModal: (folder: Folder) => void;
   showDeleteFolderModal: (folder: Folder) => void;
   canShowOverlayButtons: boolean;
+  openLinksInNewTab: boolean;
 }
 
 export const FolderItem = ({
@@ -32,6 +33,7 @@ export const FolderItem = ({
   showEditFolderModal,
   showDeleteFolderModal,
   canShowOverlayButtons,
+  openLinksInNewTab,
 }: Props) => {
   const isOpen: boolean = openFolders.has(folder.id);
   // set the sorting function depending on the parameter
@@ -110,6 +112,7 @@ export const FolderItem = ({
               isDarkMode={isDarkMode}
               showEditLinkModal = {showEditLinkModal}
               canShowOverlayButtons = {canShowOverlayButtons}
+              openLinksInNewTab = {openLinksInNewTab}
             />
           ))}
         </div>

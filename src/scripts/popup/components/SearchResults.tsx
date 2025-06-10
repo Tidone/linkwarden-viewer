@@ -8,6 +8,7 @@ interface Props {
   sortLinks: string;
   showEditLinkModal: (link: NewLink) => void;
   canShowOverlayButtons: boolean;
+  openLinksInNewTab: boolean;
 }
 
 export const SearchResults = ({
@@ -17,6 +18,7 @@ export const SearchResults = ({
   sortLinks,
   showEditLinkModal,
   canShowOverlayButtons,
+  openLinksInNewTab,
 }: Props) => {
   // set the sorting function depending on the parameter
   // do not pull the condition into the function to make sure the performance is not impacted when sorting a huge number of links
@@ -40,6 +42,7 @@ export const SearchResults = ({
           isDarkMode={isDarkMode}
           showEditLinkModal={showEditLinkModal}
           canShowOverlayButtons={canShowOverlayButtons}
+          openLinksInNewTab={openLinksInNewTab}
         />
       ))}
     </div>

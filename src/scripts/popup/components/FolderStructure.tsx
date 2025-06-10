@@ -14,6 +14,7 @@ interface Props {
   showEditFolderModal: (folder: Folder) => void;
   showDeleteFolderModal: (folder: Folder) => void;
   canShowOverlayButtons: boolean;
+  openLinksInNewTab: boolean;
 }
 
 export const FolderStructure = ({
@@ -29,6 +30,7 @@ export const FolderStructure = ({
   showEditFolderModal,
   showDeleteFolderModal,
   canShowOverlayButtons,
+  openLinksInNewTab,
 }: Props) => {
   // set the sorting function depending on the parameter
   // do not pull the condition into the function to make sure the performance is not impacted when sorting a huge number of links
@@ -58,6 +60,7 @@ export const FolderStructure = ({
       showEditFolderModal={showEditFolderModal}
       showDeleteFolderModal={showDeleteFolderModal}
       canShowOverlayButtons={canShowOverlayButtons}
+      openLinksInNewTab={openLinksInNewTab}
     />
   );
 
