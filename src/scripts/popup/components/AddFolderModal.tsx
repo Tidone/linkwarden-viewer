@@ -60,7 +60,7 @@ export const AddFolderModal = ({
                 maxLength={2048}
                 value={newFolder.name}
                 onChange={handleNewFolderChange}
-                className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs ${
                   isDarkMode
                     ? 'bg-gray-700 border-gray-600 text-white'
                     : 'bg-white border-gray-300 text-black'
@@ -72,7 +72,7 @@ export const AddFolderModal = ({
               <div>
                 <label
                   htmlFor="parentId"
-                  className="block text-xs font-medium mb-1"
+                  className="block text-sm font-medium mb-1"
                 >
                   Parent Folder
                 </label>
@@ -82,7 +82,7 @@ export const AddFolderModal = ({
                   value={newFolder.parentId ?? 0}
                   onChange={handleNewFolderChange}
                   required
-                  className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs ${
                     isDarkMode
                       ? 'bg-gray-700 border-gray-600 text-white'
                       : 'bg-white border-gray-300 text-black'

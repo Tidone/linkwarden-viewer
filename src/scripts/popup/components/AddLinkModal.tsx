@@ -50,7 +50,7 @@ export const AddLinkModal = ({
                 value={newLink.url}
                 onChange={handleNewLinkChange}
                 required
-                className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs ${
                   isDarkMode
                     ? 'bg-gray-700 border-gray-600 text-white'
                     : 'bg-white border-gray-300 text-black'
@@ -59,7 +59,7 @@ export const AddLinkModal = ({
               />
             </div>
             <div>
-              <label htmlFor="name" className="block text-sm font-medium mb-1">
+              <label htmlFor="name" className="block text-xs font-medium mb-1">
                 Title
               </label>
               <input
@@ -69,7 +69,7 @@ export const AddLinkModal = ({
                 maxLength={2048}
                 value={newLink.title}
                 onChange={handleNewLinkChange}
-                className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs ${
                   isDarkMode
                     ? 'bg-gray-700 border-gray-600 text-white'
                     : 'bg-white border-gray-300 text-black'
@@ -91,7 +91,7 @@ export const AddLinkModal = ({
                   value={newLink.collectionId}
                   onChange={handleNewLinkChange}
                   required
-                  className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs ${
                     isDarkMode
                       ? 'bg-gray-700 border-gray-600 text-white'
                       : 'bg-white border-gray-300 text-black'
@@ -143,11 +143,13 @@ export const AddLinkModal = ({
                       : isDarkMode ? '#4a5568' : 'white',
                     borderColor: isDarkMode ? '#718096' : '#e2e8f0',
                     color: isDarkMode ? 'white' : '#black',
+                    fontSize:'0.75rem'
                   }), multiValueLabel: (styles) => ({
                     ...styles,
                     backgroundColor: isDarkMode ? '#2d3748' : '#edf2f7',
                     borderColor: isDarkMode ? '#718096' : '#e2e8f0',
                     color: isDarkMode ? 'white' : '#black',
+                    fontSize:'0.75rem'
                   }),  multiValueRemove: (styles) => ({
                     ...styles,
                     backgroundColor: isDarkMode ? '#2d3748' : '#edf2f7',
@@ -162,6 +164,7 @@ export const AddLinkModal = ({
                   }), input: (styles) => ({
                     ...styles,
                     color: isDarkMode ? 'white' : 'black',
+                    fontSize:'0.875rem'
                   })}}
                 />
               </div>

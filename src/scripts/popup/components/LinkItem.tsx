@@ -77,7 +77,7 @@ export const LinkItem = ({
       }`}
     >
       <div className='cursor-pointer' onMouseUp={onMouseUp}>
-        <div className="flex items-center space-x-1">
+        <div className="flex items-center space-x-1 text-sm">
           <img src={`https://icons.duckduckgo.com/ip3/${new URL(link.url).hostname}.ico`} width={16} height={16} loading='lazy' />
           {link.name}
         </div>
@@ -99,7 +99,7 @@ export const LinkItem = ({
             isDarkMode ? 'bg-gray-800/90' : 'bg-white/90'
           } flex items-center justify-center`}
         >
-          <div className="text-center">
+          <div className="text-center text-sm">
             <p className="mb-1">Are you sure you want to delete this link?</p>
             <button
               onClick={confirmDelete}

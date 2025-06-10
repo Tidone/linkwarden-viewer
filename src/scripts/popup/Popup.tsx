@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Search, Plus, RefreshCcw, FolderPlus } from 'lucide-react';
+import { Search, Plus, RefreshCcw, FolderPlus, Settings } from 'lucide-react';
 import { BarLoader } from 'react-spinners';
 import Button from '@mui/material/Button';
 import { AddLinkModal } from './components/AddLinkModal';
@@ -348,7 +348,7 @@ const Popup = () => {
               placeholder="Search links..."
               value={searchQuery}
               onChange={handleSearch}
-              className={`w-full pl-10 pr-4 py-2 rounded-md border ${
+              className={`w-full pl-10 pr-4 py-2 rounded-md border text-sm ${
                 isDarkMode
                   ? 'bg-gray-800 border-gray-700 text-white'
                   : 'bg-white border-gray-300 text-black'
@@ -361,6 +361,7 @@ const Popup = () => {
           </div>
           <button
             onClick={openAddLinkModal}
+            title='Add link'
             className={`ml-2 p-2 rounded-md ${
               isDarkMode
                 ? 'bg-blue-600 hover:bg-blue-700'
@@ -371,6 +372,7 @@ const Popup = () => {
           </button>
           <button
             onClick={openAddFolderModal}
+            title='Add new folder'
             className={`ml-2 p-2 rounded-md ${
               isDarkMode
                 ? 'bg-blue-600 hover:bg-blue-700'
@@ -381,6 +383,7 @@ const Popup = () => {
           </button>
           <button
             onClick={loadAllLinks}
+            title='Refresh'
             className={`ml-2 p-2 rounded-md ${
               isDarkMode
                 ? 'bg-gray-800 hover:bg-gray-700'
@@ -389,8 +392,20 @@ const Popup = () => {
           >
             <RefreshCcw size={20} />
           </button>
+          <button
+            onClick={openOptions}
+            title='Open Settings'
+            className={`ml-2 p-2 rounded-md ${
+              isDarkMode
+                ? 'bg-gray-800 hover:bg-gray-700'
+                : 'bg-gray-200 hover:bg-gray-300'
+            } focus:outline-none focus:ring-2 focus:ring-gray-500`}
+          >
+            <Settings size={20} />
+          </button>
           <IconButton
             onClick={openLinkwarden}
+            title='Open LinkWarden Dashboard'
             className={`ml-2 p-2 rounded-md ${
               isDarkMode
                 ? 'bg-gray-800 hover:bg-gray-700'

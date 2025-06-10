@@ -6,6 +6,7 @@ interface ManifestChrome {
   name: string;
   version: string;
   description: string;
+  homepage_url: string;
   action: {
     default_popup: string;
   };
@@ -88,6 +89,7 @@ const createBaseChromeManifest = async (): Promise<ManifestChrome> => {
       name: pkg.longName ?? pkg.name ?? 'GIVE ME A NAME',
       version: pkg.version,
       description: pkg.description ?? 'GIVE ME A DESCRIPTION',
+      homepage_url: 'https://github.com/Tidone/linkwarden-viewer',
       action: {
         default_popup: './src/scripts/popup/popup.html',
       },
@@ -135,7 +137,7 @@ const createBaseFirefoxManifest = async (): Promise<ManifestFirefox> => {
       name: pkg.longName ?? pkg.name ?? 'GIVE ME A NAME',
       version: pkg.version,
       description: pkg.description ?? 'GIVE ME A DESCRIPTION',
-      homepage_url: 'https://github.com/Tidone/linkwarden-viewer-chrome',
+      homepage_url: 'https://github.com/Tidone/linkwarden-viewer',
       browser_action: {
         default_popup: './src/scripts/popup/popup.html',
         default_icon: {
@@ -171,7 +173,7 @@ const createBaseFirefoxManifest = async (): Promise<ManifestFirefox> => {
       ],
       browser_specific_settings: {
         gecko: {
-          id: "linkwarden_viewer@tidone.at",
+          id: "linkwarden_viewer@tidone",
           strict_min_version: "109.0"
         }
       }

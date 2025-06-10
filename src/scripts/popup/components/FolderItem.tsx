@@ -69,7 +69,7 @@ export const FolderItem = ({
         ) : (
           <Folder size={20} className="mr-2 text-blue-500" />
         )}
-        <span className="flex-grow">{folder.name}</span>
+        <span className="flex-grow text-sm">{folder.name}</span>
         <ChevronRight
           size={20}
           className={`text-gray-400 transform transition-transform ${isOpen ? 'rotate-90' : ''}`}

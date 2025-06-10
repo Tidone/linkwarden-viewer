@@ -38,7 +38,7 @@ export const DeleteFolderModal = ({
           isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'
         }`}
       >
-        <div className="p-1 text-center">
+        <div className="p-1 text-center text-sm">
           <p className="mb-2">Are you sure you want to delete this folder?</p>
           <p className="mb-2 text-red-600 font-bold">All contents will be permanently deleted!</p>
           <button
