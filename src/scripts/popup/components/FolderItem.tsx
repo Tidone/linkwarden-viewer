@@ -60,7 +60,7 @@ export const FolderItem = ({
         className={`flex items-center p-2 rounded-md cursor-pointer relative group ${
           isDarkMode
             ? 'bg-gray-800 hover:bg-gray-700'
-            : 'bg-white hover:bg-gray-100'
+            : 'bg-white hover:bg-gray-200'
         }`}
         onClick={() => toggleFolder(folder.id)}
       >
@@ -78,7 +78,7 @@ export const FolderItem = ({
           <div className='absolute top-0 right-[20px] z-10 h-full flex mr-4'>
             <div className='m-auto space-x-2'>
               <button
-                className={`text-gray-400 ${isDarkMode ? 'bg-gray-700/90' : 'bg-gray-100/90'} hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200`}
+                className={`text-gray-400 ${isDarkMode ? 'bg-gray-700/90' : 'bg-gray-200/90'} hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200`}
                 title="Edit folder"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -88,7 +88,7 @@ export const FolderItem = ({
                 <Edit3 size={20} />
               </button>
               <button
-                className={`text-gray-400 ${isDarkMode ? 'bg-gray-700/90' : 'bg-gray-100/90'} hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200`}
+                className={`text-gray-400 ${isDarkMode ? 'bg-gray-700/90' : 'bg-gray-200/90'} hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200`}
                 title="Delete folder"
                 onClick={(e) => {
                   e.stopPropagation();

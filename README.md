@@ -27,6 +27,17 @@
 3. Go to `Settings (gear symbol in the top right corner of the page) -> Install Add-On From File`
 4. Select the `extension.zip` file
 
+## Demonstration
+
+| Picture                                                          | Description                                                           |
+| ---------------------------------------------------------------- | --------------------------------------------------------------------- |
+| <img src="docs/Options.jpg" width="50%" height="50%">            | Options page                                                          |
+| <img src="docs/Popup_mid.jpg" width="50%" height="50%">          | Popup with one folder opened <br> One link has tags                   |
+| <img src="docs/Popup_large.jpg" width="50%" height="50%">        | Popup with all folders opened, scrollable page <br> One link has tags |
+| <img src="docs/Popup_hover_folder.jpg" width="50%" height="50%"> | Hovering over a folder to show the edit and delete buttons            |
+| <img src="docs/Popup_hover_link.jpg" width="50%" height="50%">   | Hovering over a link to show the edit and delete buttons              |
+| <img src="docs/Popup_new_link.jpg" width="50%" height="50%">     | Adding a new link, or editing an old one                              |
+
 ## Feature Status
 
 | Feature                          | Status  |
