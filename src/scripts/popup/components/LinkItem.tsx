@@ -77,11 +77,11 @@ export const LinkItem = ({
       {showConfirmDelete && (
         <div
           className={`absolute inset-0 ${
-            isDarkMode ? 'bg-gray-800' : 'bg-white'
-          } bg-opacity-90 flex items-center justify-center`}
+            isDarkMode ? 'bg-gray-800/90' : 'bg-white/90'
+          } flex items-center justify-center`}
         >
           <div className="text-center">
-            <p className="mb-2">Are you sure you want to delete this link?</p>
+            <p className="mb-1">Are you sure you want to delete this link?</p>
             <button
               onClick={confirmDelete}
               className="px-3 py-1 bg-red-500 text-white rounded-md mr-2 hover:bg-red-600"

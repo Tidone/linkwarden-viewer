@@ -35,3 +35,11 @@
 | Add/Delete/Modify links          | Working |
 | Add/Delete/Modify tags for links | Working |
 | Add/Delete/Modify folders        | Working |
+
+## Integration of other Bookmark Managers
+
+This extension is mainly built to integrate into LinkWarden, however it should be possible to port it to other bookmark managers,
+like [karakeep](https://github.com/karakeep-app/karakeep), [wallabag](https://github.com/wallabag/wallabag), or others depending on the API they provide.
+At least karakeep should be relatively simple to implement.
+
+If you want to use this extension with other bookmark managers, please open an issue, and I will look into it.

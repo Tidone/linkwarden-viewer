@@ -32,7 +32,7 @@ export const DeleteFolderModal = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-1">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-1">
       <div
         className={`rounded-lg w-full max-w-md ${
           isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'
