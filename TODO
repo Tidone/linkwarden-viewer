@@ -1,5 +1,0 @@
-- Implement API pagination
-    - API only return x items per call
-    - use _count field in collections to get the number of items
-    - use the cursor field in links to get the next set of links
-    - https://github.com/linkwarden/linkwarden/issues/1116

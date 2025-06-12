@@ -19,7 +19,6 @@ export class LinkwardenService {
         throw 'Could not fetch folders: ' + data.response;
       }
       const result: Folder[] = data.response.map((value) => ({id: value.id, name: value.name, ownerId: value.ownerId, parentId: value.parentId, createdAt: value.createdAt}));
-      console.log("Got folders: " + JSON.stringify(result));
       return result;
     } catch (error) {
       console.error('Error fetching folders:', error);
@@ -43,10 +42,10 @@ export class LinkwardenService {
     }
   }
 
-  async fetchLinks(collectionId: number) {
+  async _fetchLinksWithCursor(collectionId: number, cursor: number) {
     try {
       const response = await fetch(
-        `${this.host}/api/v1/links?collectionId=${collectionId}`,
+        `${this.host}/api/v1/links?cursor=${cursor}&sort=0&collectionId=${collectionId}`,
         {
           headers: {
             Authorization: `Bearer ${this.token}`,
@@ -65,11 +64,32 @@ export class LinkwardenService {
         tags: value.tags.map((tag) => ({id: tag.id, name: tag.name})),
         folder: ({id: value.collection.id, name: value.collection.name, ownerId: value.collection.ownerId})
       }));
-      console.log("Got links: " + JSON.stringify(result));
       return result;
     } catch (error) {
       console.error('Error fetching links:', error);
     }
+  }
+
+  async fetchLinks(collectionId: number) {
+    let cursor = 0;
+    let count = 0;
+    const allLinks: Link[] = [];
+
+    while(true) {
+      const result = await this._fetchLinksWithCursor(collectionId, cursor);
+      allLinks.push(...result);
+      if(result.length == 0) {  // if the cursor is past the last element in the collection, the fetch request will return an empty array
+        break;
+      }
+      cursor = result.at(-1).id;
+
+      if(count++ >= 200) {  // each request will return at most 50 elements
+        console.warn("Aborting link fetch after 10000 elements. Consider moving links into subcollections.");
+        break;
+      }
+    }
+
+    return allLinks;
   }
 
   async fetchTags() {
@@ -84,7 +104,6 @@ export class LinkwardenService {
         throw 'Could not fetch tags: ' + data.response;
       }
       const result: Tag[] = data.response.map((value) => ({id: value.id, name: value.name}));
-      console.log("Got tags: " + JSON.stringify(result));
       return result;
     } catch (error) {
       console.error('Error fetching tags:', error);
@@ -99,7 +118,6 @@ export class LinkwardenService {
   }) {
     try {
       const request = {name: link.title, url: link.url, type: "url", collection: {id: +(link.collectionId)}, tags: link.tags.map((value) => ({id: +value}))};
-      console.log("saveLink: " + JSON.stringify(request) );
       const response = await fetch(`${this.host}/api/v1/links`, {
         method: 'POST',
         headers: {
@@ -144,7 +162,6 @@ export class LinkwardenService {
   ) {
     try {
       const request = {id: +(link.id), name: link.title, url: link.url, collection: {id: +(link.collectionId), ownerId: +(collectionOwnerId)}, tags: link.tags.map((value) => ({name: value}))};
-      console.log("updateLink: " + JSON.stringify(request));
       const response = await fetch(`${this.host}/api/v1/links/${link.id}`, {
         method: 'PUT',
         headers: {
@@ -183,7 +200,6 @@ export class LinkwardenService {
   ) {
     try {
       const request = {name: name, parentId: +parentId};
-      console.log("createFolder: " + JSON.stringify(request));
       const response = await fetch(`${this.host}/api/v1/collections`, {
         method: 'POST',
         headers: {
@@ -214,7 +230,6 @@ export class LinkwardenService {
       // this avoids resetting fields that have been set in the Linkwarden Dashboard
       // also, for some reason this API endpoint needs all fields to be set, not only the updated ones
       const request = {...oldData, id: +id, name: name, parentId: parentId == 0 ? 'root' : +parentId};
-      console.log("updateFolder: " + JSON.stringify(request));
       const response = await fetch(`${this.host}/api/v1/collections/${id}`, {
         method: 'PUT',
         headers: {
