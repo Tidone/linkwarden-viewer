@@ -43,8 +43,8 @@ export const FolderItem = ({
     : sortLinks == 'name_descending'
       ? (a: Link, b: Link) => b.name.localeCompare(a.name)
       : sortLinks == 'date_ascending'
-        ? (a: Link, b: Link) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf()
-        : (a: Link, b: Link) => new Date(a.createdAt).valueOf() - new Date(b.createdAt).valueOf();
+        ? (a: Link, b: Link) => new Date(a.createdAt).valueOf() - new Date(b.createdAt).valueOf()
+        : (a: Link, b: Link) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf();
   const sortedLinks = [...links].sort(sortFunction);
 
   useEffect(() => {

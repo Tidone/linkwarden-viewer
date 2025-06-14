@@ -39,8 +39,8 @@ export const FolderStructure = ({
     : sortFolders == 'name_descending'
       ? (a: Folder, b: Folder) => b.name.localeCompare(a.name)
       : sortFolders == 'date_ascending'
-        ? (a: Folder, b: Folder) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf()
-        : (a: Folder, b: Folder) => new Date(a.createdAt).valueOf() - new Date(b.createdAt).valueOf();
+        ? (a: Folder, b: Folder) => new Date(a.createdAt).valueOf() - new Date(b.createdAt).valueOf()
+        : (a: Folder, b: Folder) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf();
   const sortedFolders: Folder[] = [...folders].sort(sortFunction);
   const rootFolders = sortedFolders.filter((folder) => !folder.parentId);
 
