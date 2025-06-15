@@ -1,8 +1,8 @@
 {
-    "name": "web-extension-boilerplate-23",
+    "name": "manage-linkwarden-bookmarks",
     "longName": "Manage LinkWarden Bookmarks",
     "description": "Manage Linkwarden Bookmarks",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "main": "index.js",
     "scripts": {
         "format": "prettier --write \"./src/**/*.ts\" \"./src/**/*.tsx\"",

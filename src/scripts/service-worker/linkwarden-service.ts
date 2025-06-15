@@ -60,7 +60,7 @@ export class LinkwardenService {
         id: value.id,
         name: value.name,
         url: value.url,
-        createdAt: value.createdAt,
+        createdAt: value.importDate || value.createdAt, // the importDate is set if an entry is imported into LinkWarden, it is the date when the link was saved the first time
         tags: value.tags.map((tag) => ({id: tag.id, name: tag.name})),
         folder: ({id: value.collection.id, name: value.collection.name, ownerId: value.collection.ownerId})
       }));
