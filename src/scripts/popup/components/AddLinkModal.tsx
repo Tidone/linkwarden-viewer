@@ -106,69 +106,67 @@ export const AddLinkModal = ({
                 </select>
               </div>
             )}
-            {allTags.length > 0 && (
-              <div>
-                <label
-                  htmlFor="tagIds"
-                  className="block text-xs font-medium mb-1"
-                >
-                  Tags
-                </label>
-                <CreatableSelect
-                  isMulti
-                  name='tagIds'
-                  id='tagIds'
-                  options={allTagOptions}
-                  value={selectedTags}
-                  maxMenuHeight={120}
-                  onChange={(values) => {handleTagChange(values.map((value) => value.label))}}
-                  styles={{control: (styles) => ({
-                    ...styles,
-                    backgroundColor: isDarkMode ? '#4a5568' : 'white',
-                    borderColor: isDarkMode ? '#718096' : '#e2e8f0',
-                    color: isDarkMode ? 'white' : '#black',
-                  }), dropdownIndicator: (styles) => ({
-                    ...styles,
-                    color: isDarkMode ? 'white' : '#black',
-                  }), clearIndicator: (styles) => ({
-                    ...styles,
-                    color: isDarkMode ? 'white' : '#black',
-                  }), placeholder: (styles) => ({
-                    ...styles,
-                    color: isDarkMode ? 'white' : '#black',
-                  }), option: (styles, {data, isDisabled, isFocused, isSelected}) => ({
-                    ...styles,
-                    backgroundColor: isFocused
-                      ? isDarkMode ? '#2d3748' : '#e2e8f0'
-                      : isDarkMode ? '#4a5568' : 'white',
-                    borderColor: isDarkMode ? '#718096' : '#e2e8f0',
-                    color: isDarkMode ? 'white' : '#black',
-                    fontSize:'0.75rem'
-                  }), multiValueLabel: (styles) => ({
-                    ...styles,
-                    backgroundColor: isDarkMode ? '#2d3748' : '#edf2f7',
-                    borderColor: isDarkMode ? '#718096' : '#e2e8f0',
-                    color: isDarkMode ? 'white' : '#black',
-                    fontSize:'0.75rem'
-                  }),  multiValueRemove: (styles) => ({
-                    ...styles,
-                    backgroundColor: isDarkMode ? '#2d3748' : '#edf2f7',
-                    borderColor: isDarkMode ? '#718096' : '#e2e8f0',
-                    color: isDarkMode ? 'white' : '#black',
-                    ':hover': {
-                      backgroundColor: isDarkMode ? '#1a202c' : '#e2e8f0',
-                    }
-                  }), menu: (styles) => ({
-                    ...styles,
-                    backgroundColor: isDarkMode ? '#4a5568' : 'white',
-                  }), input: (styles) => ({
-                    ...styles,
-                    color: isDarkMode ? 'white' : 'black',
-                    fontSize:'0.875rem'
-                  })}}
-                />
-              </div>
-            )}
+            <div>
+              <label
+                htmlFor="tagIds"
+                className="block text-xs font-medium mb-1"
+              >
+                Tags
+              </label>
+              <CreatableSelect
+                isMulti
+                name='tagIds'
+                id='tagIds'
+                options={allTagOptions}
+                value={selectedTags}
+                maxMenuHeight={120}
+                onChange={(values) => {handleTagChange(values.map((value) => value.label))}}
+                styles={{control: (styles) => ({
+                  ...styles,
+                  backgroundColor: isDarkMode ? '#4a5568' : 'white',
+                  borderColor: isDarkMode ? '#718096' : '#e2e8f0',
+                  color: isDarkMode ? 'white' : '#black',
+                }), dropdownIndicator: (styles) => ({
+                  ...styles,
+                  color: isDarkMode ? 'white' : '#black',
+                }), clearIndicator: (styles) => ({
+                  ...styles,
+                  color: isDarkMode ? 'white' : '#black',
+                }), placeholder: (styles) => ({
+                  ...styles,
+                  color: isDarkMode ? 'white' : '#black',
+                }), option: (styles, {data, isDisabled, isFocused, isSelected}) => ({
+                  ...styles,
+                  backgroundColor: isFocused
+                    ? isDarkMode ? '#2d3748' : '#e2e8f0'
+                    : isDarkMode ? '#4a5568' : 'white',
+                  borderColor: isDarkMode ? '#718096' : '#e2e8f0',
+                  color: isDarkMode ? 'white' : '#black',
+                  fontSize:'0.75rem'
+                }), multiValueLabel: (styles) => ({
+                  ...styles,
+                  backgroundColor: isDarkMode ? '#2d3748' : '#edf2f7',
+                  borderColor: isDarkMode ? '#718096' : '#e2e8f0',
+                  color: isDarkMode ? 'white' : '#black',
+                  fontSize:'0.75rem'
+                }),  multiValueRemove: (styles) => ({
+                  ...styles,
+                  backgroundColor: isDarkMode ? '#2d3748' : '#edf2f7',
+                  borderColor: isDarkMode ? '#718096' : '#e2e8f0',
+                  color: isDarkMode ? 'white' : '#black',
+                  ':hover': {
+                    backgroundColor: isDarkMode ? '#1a202c' : '#e2e8f0',
+                  }
+                }), menu: (styles) => ({
+                  ...styles,
+                  backgroundColor: isDarkMode ? '#4a5568' : 'white',
+                }), input: (styles) => ({
+                  ...styles,
+                  color: isDarkMode ? 'white' : 'black',
+                  fontSize:'0.875rem'
+                })}}
+              />
+            </div>
           </div>
           <div className="mt-1 flex justify-end space-x-3">
             <button
