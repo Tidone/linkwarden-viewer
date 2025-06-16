@@ -1,4 +1,77 @@
-export class LinkwardenService {
+interface FetchFolderInfo {
+  id: number;
+  name: string;
+  ownerId: number;
+  parentId: number;
+  createdAt: string;
+}
+
+interface FetchFoldersResponse {
+  response: FetchFolderInfo[];
+}
+
+interface FetchFolderResponse {
+  response: FetchFolderInfo;
+}
+
+interface FetchLinksResponse {
+  response: {
+    id: number;
+    name: string;
+    url: string;
+    importDate?: string;
+    createdAt: string;
+    tags: {
+      id: number;
+      name: string;
+    }[];
+    collection: {
+      id: number;
+      name: string;
+      ownerId: number;
+      createdAt: string;
+    };
+  }[];
+}
+
+interface FetchTagsResponse {
+  response: {
+    id: number;
+    name: string;
+  }[];
+}
+
+interface CreateLinkRequest {
+  name: string;
+  url: string;
+  type: string;
+  collection: {
+    id: number;
+  };
+  tags: {
+    name: string;
+  }[];
+}
+
+interface UpdateLinkRequest extends Omit<CreateLinkRequest, 'type'> {
+  id: number;
+  collection: {
+    id: number;
+    ownerId: number;
+  };
+}
+
+interface CreateFolderRequest {
+  name: string;
+  parentId: number;
+}
+
+interface UpdateFolderRequest extends Omit<CreateFolderRequest, 'parentId'> {
+  id: number;
+  parentId: string | number;
+}
+
+export class LinkwardenService implements BookmarkManagerService {
   host: string;
   token: string;
 
@@ -14,7 +87,7 @@ export class LinkwardenService {
           Authorization: `Bearer ${this.token}`,
         },
       });
-      const data = await response.json();
+      const data: FetchFoldersResponse = await response.json();
       if(response.status !== 200) {
         throw 'Could not fetch folders: ' + data.response;
       }
@@ -32,7 +105,7 @@ export class LinkwardenService {
           Authorization: `Bearer ${this.token}`,
         },
       });
-      const data = await response.json();
+      const data: FetchFolderResponse = await response.json();
       if(response.status !== 200) {
         throw 'Could not fetch folders: ' + data.response;
       }
@@ -52,7 +125,7 @@ export class LinkwardenService {
           },
         },
       );
-      const data = await response.json();
+      const data: FetchLinksResponse = await response.json();
       if(response.status !== 200) {
         throw 'Could not fetch links: ' + data.response;
       }
@@ -62,7 +135,7 @@ export class LinkwardenService {
         url: value.url,
         createdAt: value.importDate || value.createdAt, // the importDate is set if an entry is imported into LinkWarden, it is the date when the link was saved the first time
         tags: value.tags.map((tag) => ({id: tag.id, name: tag.name})),
-        folder: ({id: value.collection.id, name: value.collection.name, ownerId: value.collection.ownerId})
+        folder: ({id: value.collection.id, name: value.collection.name, ownerId: value.collection.ownerId, createdAt: value.collection.createdAt})
       }));
       return result;
     } catch (error) {
@@ -99,7 +172,7 @@ export class LinkwardenService {
           Authorization: `Bearer ${this.token}`,
         },
       });
-      const data = await response.json();
+      const data: FetchTagsResponse = await response.json();
       if(response.status !== 200) {
         throw 'Could not fetch tags: ' + data.response;
       }
@@ -110,14 +183,9 @@ export class LinkwardenService {
     }
   }
 
-  async saveLink(link: {
-    title: string;
-    url: string;
-    collectionId: number;
-    tags: string[];
-  }) {
+  async saveLink(link: NewLink) {
     try {
-      const request = {name: link.title, url: link.url, type: "url", collection: {id: +(link.collectionId)}, tags: link.tags.map((value) => ({id: +value}))};
+      const request: CreateLinkRequest = {name: link.title, url: link.url, type: "url", collection: {id: +(link.collectionId)}, tags: link.tags.map((value) => ({name: value}))};
       const response = await fetch(`${this.host}/api/v1/links`, {
         method: 'POST',
         headers: {
@@ -161,7 +229,7 @@ export class LinkwardenService {
     collectionOwnerId: string
   ) {
     try {
-      const request = {id: +(link.id), name: link.title, url: link.url, collection: {id: +(link.collectionId), ownerId: +(collectionOwnerId)}, tags: link.tags.map((value) => ({name: value}))};
+      const request: UpdateLinkRequest = {id: +(link.id), name: link.title, url: link.url, collection: {id: +(link.collectionId), ownerId: +(collectionOwnerId)}, tags: link.tags.map((value) => ({name: value}))};
       const response = await fetch(`${this.host}/api/v1/links/${link.id}`, {
         method: 'PUT',
         headers: {
@@ -199,7 +267,7 @@ export class LinkwardenService {
     parentId: number
   ) {
     try {
-      const request = {name: name, parentId: +parentId};
+      const request: CreateFolderRequest = {name: name, parentId: +parentId};
       const response = await fetch(`${this.host}/api/v1/collections`, {
         method: 'POST',
         headers: {
@@ -229,7 +297,7 @@ export class LinkwardenService {
       // fetch the old folder data first and only update the necessary fields
       // this avoids resetting fields that have been set in the Linkwarden Dashboard
       // also, for some reason this API endpoint needs all fields to be set, not only the updated ones
-      const request = {...oldData, id: +id, name: name, parentId: parentId == 0 ? 'root' : +parentId};
+      const request: UpdateFolderRequest = {...oldData, id: +id, name: name, parentId: parentId == 0 ? 'root' : +parentId};
       const response = await fetch(`${this.host}/api/v1/collections/${id}`, {
         method: 'PUT',
         headers: {

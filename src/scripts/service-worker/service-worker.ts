@@ -32,7 +32,7 @@ getBrowser().runtime.onMessage.addListener(function (request, sender, sendRespon
     return false;
   }
 
-  let service = new LinkwardenService(host, token);
+  const service: BookmarkManagerService = new LinkwardenService(host, token);
   if (request.action === 'fetchAllLinksFromAllFolders') {
     service.fetchAllLinksFromAllFolders().then(sendResponse);
     return true;
