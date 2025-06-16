@@ -5,7 +5,7 @@ import { getBrowser, getStorageItem, setStorageItem } from '../utils/utils';
 const Options = () => {
   const [host, setHost] = useState('');
   const [token, setToken] = useState('');
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState<{isError: boolean; text: string;}>({isError: false, text: ''});
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showToken, setShowToken] = useState(false);
   const [linkSort, setLinkSort] = useState('name_ascending');
@@ -62,14 +62,16 @@ const Options = () => {
     .then(() =>
       getBrowser().runtime.sendMessage({action: 'reload'})
     ).then(() => {
-      setStatus('Options saved successfully.');
-      setTimeout(() => setStatus(''), 3000);
+      setStatus({isError: false, text: 'Options saved successfully.'});
+      setTimeout(() => setStatus({isError: false, text: ''}), 3000);
     });
   };
 
   const handleRefresh = () => {
-    setStatus('Refreshing data...');
-    getBrowser().runtime.sendMessage({action: 'fetchAllLinksFromAllFolders'}).then((links) => {
+    setStatus({isError: false, text: 'Refreshing data...'});
+    getBrowser().runtime.sendMessage({action: 'clearErrorFlag'}).then(() =>
+      getBrowser().runtime.sendMessage({action: 'fetchAllLinksFromAllFolders'})
+    ).then((links) => {
       console.log(links);
       if(links) {
         setStorageItem('linksByFolder', links);
@@ -77,13 +79,19 @@ const Options = () => {
       return getBrowser().runtime.sendMessage({action: 'fetchFolders'});
     }).then((folders) => {
       if(folders) {
-          setStorageItem('allFolders', folders);
-        }
-      setStatus('Data refreshed successfully.')
-      setTimeout(() => setStatus(''), 3000);
+        setStorageItem('allFolders', folders);
+      }
+      return getBrowser().runtime.sendMessage({action: 'getErrorFlag'});
+    }).then((errorFlag) => {
+      if(!errorFlag) {
+        setStatus({isError: false, text: 'Data refreshed successfully.'});
+      } else {
+        setStatus({isError: true, text: 'Error refreshing data. Please check your settings.'});
+      }
+      setTimeout(() => setStatus({isError: false, text: ''}), 3000);
     }).catch(() => {
-      setStatus('Error refreshing data. Please check your settings.');
-      setTimeout(() => setStatus(''), 3000);
+      setStatus({isError: true, text: 'Error refreshing data. Please check your settings.'});
+      setTimeout(() => setStatus({isError: false, text: ''}), 3000);
     });
   };
 
@@ -249,15 +257,15 @@ const Options = () => {
               </button>
             </div>
           </form>
-          {status && (
+          {status.text && (
             <div
               className={`mt-6 p-3 rounded-md text-center text-sm ${
                 isDarkMode
-                  ? 'bg-blue-900 text-blue-200'
-                  : 'bg-blue-100 text-blue-800'
+                  ? status.isError ? 'bg-red-900 text-red-200' : 'bg-blue-900 text-blue-200'
+                  : status.isError ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
               }`}
             >
-              {status}
+              {status.text}
             </div>
           )}
         </div>

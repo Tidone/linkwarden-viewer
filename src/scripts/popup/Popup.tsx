@@ -135,7 +135,9 @@ const Popup = () => {
 
       return getBrowser().runtime.sendMessage({action: 'fetchTags'});
     }).then((tags) => {
-      setAllTags(tags);
+      if(!!tags) {
+        setAllTags(tags);
+      }
       setShowAddLinkModal(true);
     });
   }, [folders]);
@@ -150,7 +152,9 @@ const Popup = () => {
     });
 
     getBrowser().runtime.sendMessage({action: 'fetchTags'}).then((tags) => {
-      setAllTags(tags);
+      if(!!tags) {
+        setAllTags(tags);
+      }
       setShowAddFolderModal(true);
     });
   }, []);
