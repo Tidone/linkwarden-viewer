@@ -59,13 +59,13 @@ export const AddLinkModal = ({
               />
             </div>
             <div>
-              <label htmlFor="name" className="block text-xs font-medium mb-1">
+              <label htmlFor="title" className="block text-xs font-medium mb-1">
                 Title
               </label>
               <input
                 type="text"
-                id="name"
-                name="name"
+                id="title"
+                name="title"
                 maxLength={2048}
                 value={newLink.title}
                 onChange={handleNewLinkChange}
