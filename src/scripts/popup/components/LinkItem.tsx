@@ -79,7 +79,9 @@ export const LinkItem = ({
       <div className='cursor-pointer' onMouseUp={onMouseUp}>
         <div className="flex items-center text-sm">
           <img src={`https://icons.duckduckgo.com/ip3/${new URL(link.url).hostname}.ico`} width={16} height={16} loading='lazy' className='mr-1' />
-          {link.name}
+          <div className='truncate'>
+            {link.name}
+          </div>
         </div>
         <div className="flex justify-between mt-1 text-xs text-gray-500">
           <span title={link.url} className="truncate max-w-[60%]">{link.url}</span>
