@@ -80,7 +80,7 @@ export class LinkwardenService implements BookmarkManagerService {
     this.token = token;
   }
 
-  async fetchFolders() {
+  async fetchFolders(): Promise<ApiReturnType<Folder[]>> {
     try {
       const response = await fetch(`${this.host}/api/v1/collections`, {
         headers: {
@@ -92,13 +92,14 @@ export class LinkwardenService implements BookmarkManagerService {
         throw 'Could not fetch folders: ' + data.response;
       }
       const result: Folder[] = data.response.map((value) => ({id: value.id, name: value.name, ownerId: value.ownerId, parentId: value.parentId, createdAt: value.createdAt}));
-      return result;
+      return {success: true, data: result};
     } catch (error) {
-      console.error('Error fetching folders:', error);
+      console.error('Error fetching folders: ', error);
+      return {success: false, data: error.message};
     }
   }
 
-  async _fetchFolder(id: number) {
+  async _fetchFolderData(id: number): Promise<ApiReturnType<any>> {
     try {
       const response = await fetch(`${this.host}/api/v1/collections/${id}`, {
         headers: {
@@ -109,13 +110,14 @@ export class LinkwardenService implements BookmarkManagerService {
       if(response.status !== 200) {
         throw 'Could not fetch folders: ' + data.response;
       }
-      return data.response;
+      return {success: true, data: data.response};
     } catch (error) {
-      console.error('Error fetching folders:', error);
+      console.error('Error fetching folders: ', error);
+      return {success: false, data: error.message};
     }
   }
 
-  async _fetchLinksWithCursor(collectionId: number, cursor: number) {
+  async _fetchLinksWithCursor(collectionId: number, cursor: number): Promise<ApiReturnType<Link[]>> {
     try {
       const response = await fetch(
         `${this.host}/api/v1/links?cursor=${cursor}&sort=0&collectionId=${collectionId}`,
@@ -137,24 +139,29 @@ export class LinkwardenService implements BookmarkManagerService {
         tags: value.tags.map((tag) => ({id: tag.id, name: tag.name})),
         folder: ({id: value.collection.id, name: value.collection.name, ownerId: value.collection.ownerId, createdAt: value.collection.createdAt})
       }));
-      return result;
+      return {success: true, data: result};
     } catch (error) {
-      console.error('Error fetching links:', error);
+      console.error('Error fetching links: ', error);
+      return {success: false, data: error.message};
     }
   }
 
-  async fetchLinks(collectionId: number) {
+  async fetchLinks(collectionId: number): Promise<ApiReturnType<Link[]>> {
     let cursor = 0;
     let count = 0;
     const allLinks: Link[] = [];
 
     while(true) {
       const result = await this._fetchLinksWithCursor(collectionId, cursor);
-      allLinks.push(...result);
-      if(result.length == 0) {  // if the cursor is past the last element in the collection, the fetch request will return an empty array
+      if (!result.success) {
+        return {success: false, data: result.data};
+      }
+      allLinks.push(...result.data);
+
+      if(result.data.length == 0) {  // if the cursor is past the last element in the collection, the fetch request will return an empty array
         break;
       }
-      cursor = result.at(-1).id;
+      cursor = result.data.at(-1).id;
 
       if(count++ >= 200) {  // each request will return at most 50 elements
         console.warn("Aborting link fetch after 10000 elements. Consider moving links into subcollections.");
@@ -162,10 +169,10 @@ export class LinkwardenService implements BookmarkManagerService {
       }
     }
 
-    return allLinks;
+    return {success: true, data: allLinks};
   }
 
-  async fetchTags() {
+  async fetchTags(): Promise<ApiReturnType<Tag[]>> {
     try {
       const response = await fetch(`${this.host}/api/v1/tags`, {
         headers: {
@@ -177,13 +184,14 @@ export class LinkwardenService implements BookmarkManagerService {
         throw 'Could not fetch tags: ' + data.response;
       }
       const result: Tag[] = data.response.map((value) => ({id: value.id, name: value.name}));
-      return result;
+      return {success: true, data: result};
     } catch (error) {
-      console.error('Error fetching tags:', error);
+      console.error('Error fetching tags: ', error);
+      return {success: false, data: error.message};
     }
   }
 
-  async saveLink(link: NewLink) {
+  async saveLink(link: NewLink): Promise<ApiReturnType<any>> {
     try {
       const request: CreateLinkRequest = {name: link.title, url: link.url, type: "url", collection: {id: +(link.collectionId)}, tags: link.tags.map((value) => ({name: value}))};
       const response = await fetch(`${this.host}/api/v1/links`, {
@@ -200,12 +208,12 @@ export class LinkwardenService implements BookmarkManagerService {
       }
       return { success: true, data: data.response };
     } catch (error) {
-      console.error('Error saving link:', error);
-      return { success: false, error: error.message };
+      console.error('Error saving link: ', error);
+      return { success: false, data: error.message };
     }
   }
 
-  async deleteLink(linkId: number) {
+  async deleteLink(linkId: number): Promise<ApiReturnType<any>> {
     try {
       const response = await fetch(`${this.host}/api/v1/links/${linkId}`, {
         method: 'DELETE',
@@ -219,15 +227,15 @@ export class LinkwardenService implements BookmarkManagerService {
       }
       return { success: true, data: data.response };
     } catch (error) {
-      console.error('Error deleting link:', error);
-      return { success: false, error: error.message };
+      console.error('Error deleting link: ', error);
+      return { success: false, data: error.message };
     }
   }
 
   async updateLink(
     link: NewLink,
     collectionOwnerId: string
-  ) {
+  ): Promise<ApiReturnType<any>> {
     try {
       const request: UpdateLinkRequest = {id: +(link.id), name: link.title, url: link.url, collection: {id: +(link.collectionId), ownerId: +(collectionOwnerId)}, tags: link.tags.map((value) => ({name: value}))};
       const response = await fetch(`${this.host}/api/v1/links/${link.id}`, {
@@ -244,28 +252,40 @@ export class LinkwardenService implements BookmarkManagerService {
       }
       return { success: true, data: data.response };
     } catch (error) {
-      console.error('Error updating link:', error);
-      return { success: false, error: error.message };
+      console.error('Error updating link: ', error);
+      return { success: false, data: error.message };
     }
   }
 
-  async fetchAllLinksFromAllFolders() {
+  async fetchAllLinksFromAllFolders(): Promise<ApiReturnType<any>> {
     const folders = await this.fetchFolders();
     let allLinks = {};
 
-    await Promise.all(
-      folders.map(async (folder) => {
-        const links = await this.fetchLinks(folder.id);
-        allLinks[folder.id] = links;
-      }),
-    );
-    return allLinks;
+    if(!folders.success) {
+      return { success: false, data: folders.data };
+    }
+    try {
+      await Promise.all(
+        folders.data.map(async (folder) => {
+          const links = await this.fetchLinks(folder.id);
+          if(links.success) {
+            allLinks[folder.id] = links.data;
+          } else {
+            throw links.data;
+          }
+        }),
+      );
+      return {success: true, data: allLinks};
+    } catch (error) {
+      console.error('Error fetching links: ', error);
+      return {success: false, data: error.message};
+    }
   }
 
   async createFolder(
     name: string,
     parentId: number
-  ) {
+  ): Promise<ApiReturnType<any>> {
     try {
       const request: CreateFolderRequest = {name: name, parentId: +parentId};
       const response = await fetch(`${this.host}/api/v1/collections`, {
@@ -282,8 +302,8 @@ export class LinkwardenService implements BookmarkManagerService {
       }
       return { success: true, data: data.response };
     } catch (error) {
-      console.error('Error creating collection:', error);
-      return { success: false, error: error.message };
+      console.error('Error creating collection: ', error);
+      return { success: false, data: error.message };
     }
   }
 
@@ -291,13 +311,16 @@ export class LinkwardenService implements BookmarkManagerService {
     id: number,
     name: string,
     parentId: number,
-  ) {
+  ): Promise<ApiReturnType<any>> {
     try {
-      const oldData = await this._fetchFolder(id);
+      const oldData = await this._fetchFolderData(id);
+      if(!oldData.success) {
+        throw 'Could not fetch old collection data: ' + oldData.data;
+      }
       // fetch the old folder data first and only update the necessary fields
       // this avoids resetting fields that have been set in the Linkwarden Dashboard
       // also, for some reason this API endpoint needs all fields to be set, not only the updated ones
-      const request: UpdateFolderRequest = {...oldData, id: +id, name: name, parentId: parentId == 0 ? 'root' : +parentId};
+      const request: UpdateFolderRequest = {...oldData.data, id: +id, name: name, parentId: parentId == 0 ? 'root' : +parentId};
       const response = await fetch(`${this.host}/api/v1/collections/${id}`, {
         method: 'PUT',
         headers: {
@@ -308,16 +331,16 @@ export class LinkwardenService implements BookmarkManagerService {
       });
       const data = await response.json();
       if(response.status !== 200) {
-        throw 'Could not update folder: ' + data.response;
+        throw 'Could not update collection: ' + data.response;
       }
       return { success: true, data: data.response };
     } catch (error) {
-      console.error('Error creating collection:', error);
-      return { success: false, error: error.message };
+      console.error('Error creating collection: ', error);
+      return { success: false, data: error.message };
     }
   }
 
-  async deleteFolder(collectionId: number) {
+  async deleteFolder(collectionId: number): Promise<ApiReturnType<any>> {
     try {
       const response = await fetch(`${this.host}/api/v1/collections/${collectionId}`, {
         method: 'DELETE',
@@ -331,8 +354,8 @@ export class LinkwardenService implements BookmarkManagerService {
       }
       return { success: true, data: data.response };
     } catch (error) {
-      console.error('Error deleting link:', error);
-      return { success: false, error: error.message };
+      console.error('Error deleting link: ', error);
+      return { success: false, data: error.message };
     }
   }
 }

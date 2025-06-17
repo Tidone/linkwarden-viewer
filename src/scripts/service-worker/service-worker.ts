@@ -3,7 +3,6 @@ import { getBrowser, getStorageItems } from '../utils/utils';
 
 let host: string;
 let token: string;
-let errorFlag: boolean;
 
 console.log('Background Service Worker Loaded');
 
@@ -25,12 +24,6 @@ getBrowser().runtime.onMessage.addListener(function (request, sender, sendRespon
       token = result.token;
     });
     return false;
-  } else if (request.action === 'clearErrorFlag') {
-    errorFlag = false;
-    return false;
-  } else if (request.action === 'getErrorFlag') {
-    sendResponse(errorFlag);
-    return false;
   }
 
   if(!host || !token)
@@ -41,34 +34,34 @@ getBrowser().runtime.onMessage.addListener(function (request, sender, sendRespon
 
   const service: BookmarkManagerService = new LinkwardenService(host, token);
   if (request.action === 'fetchAllLinksFromAllFolders') {
-    service.fetchAllLinksFromAllFolders().then(sendResponse).catch(() => {sendResponse(); errorFlag = true;});
+    service.fetchAllLinksFromAllFolders().then(sendResponse);
     return true;
   } else if (request.action === 'fetchFolders') {
-    service.fetchFolders().then(sendResponse).catch(() => {sendResponse(); errorFlag = true;});
+    service.fetchFolders().then(sendResponse);
     return true;
   } else if (request.action === 'fetchLinks') {
-    service.fetchLinks(request.collectionId).then(sendResponse).catch(() => {sendResponse(); errorFlag = true;});
+    service.fetchLinks(request.collectionId).then(sendResponse);
     return true;
   } else if (request.action === 'fetchTags') {
-    service.fetchTags().then(sendResponse).catch(() => {sendResponse(); errorFlag = true;});
+    service.fetchTags().then(sendResponse);
     return true;
   } else if (request.action === 'saveLink') {
-    service.saveLink(request.link).then(sendResponse).catch(() => {sendResponse(); errorFlag = true;});
+    service.saveLink(request.link).then(sendResponse);
     return true;
   } else if (request.action === 'updateLink') {
-    service.updateLink(request.data, request.collectionOwnerId).then(sendResponse).catch(() => {sendResponse(); errorFlag = true;});
+    service.updateLink(request.data, request.collectionOwnerId).then(sendResponse);
     return true;
   } else if (request.action === 'deleteLink') {
-    service.deleteLink(request.id).then(sendResponse).catch(() => {sendResponse(); errorFlag = true;});
+    service.deleteLink(request.id).then(sendResponse);
     return true;
   } else if (request.action === 'createFolder') {
-    service.createFolder(request.name, request.parentId).then(sendResponse).catch(() => {sendResponse(); errorFlag = true;});
+    service.createFolder(request.name, request.parentId).then(sendResponse);
     return true;
   } else if (request.action === 'updateFolder') {
-    service.updateFolder(request.id, request.name, request.parentId).then(sendResponse).catch(() => {sendResponse(); errorFlag = true;});
+    service.updateFolder(request.id, request.name, request.parentId).then(sendResponse);
     return true;
   } else if (request.action === 'deleteFolder') {
-    service.deleteFolder(request.id).then(sendResponse).catch(() => {sendResponse(); errorFlag = true;});
+    service.deleteFolder(request.id).then(sendResponse);
     return true;
   }
   return false;

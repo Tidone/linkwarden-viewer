@@ -1,28 +1,27 @@
-interface ApiReturnType {
+interface ApiReturnType<T> {
     success: boolean;
-    data?: any;
-    error?: any;
+    data: T;
 }
 
 interface BookmarkManagerService {
-    fetchAllLinksFromAllFolders(): Promise<{}>;
-    fetchFolders(): Promise<Folder[]>;
-    fetchLinks(collectionId: number): Promise<Link[]>;
-    fetchTags(): Promise<Tag[]>;
-    saveLink(link: NewLink): Promise<ApiReturnType>;
+    fetchAllLinksFromAllFolders(): Promise<ApiReturnType<{}>>;
+    fetchFolders(): Promise<ApiReturnType<Folder[]>>;
+    fetchLinks(collectionId: number): Promise<ApiReturnType<Link[]>>;
+    fetchTags(): Promise<ApiReturnType<Tag[]>>;
+    saveLink(link: NewLink): Promise<ApiReturnType<any>>;
     updateLink(
         link: NewLink,
         collectionOwnerId: string
-    ): Promise<ApiReturnType>;
-    deleteLink(linkId: number): Promise<ApiReturnType>;
+    ): Promise<ApiReturnType<any>>;
+    deleteLink(linkId: number): Promise<ApiReturnType<any>>;
     createFolder(
         name: string,
         parentId: number
-    ): Promise<ApiReturnType>;
+    ): Promise<ApiReturnType<any>>;
     updateFolder(
         id: number,
         name: string,
         parentId: number,
-    ): Promise<ApiReturnType>;
-    deleteFolder(collectionId: number): Promise<ApiReturnType>;
+    ): Promise<ApiReturnType<any>>;
+    deleteFolder(collectionId: number): Promise<ApiReturnType<any>>;
 }

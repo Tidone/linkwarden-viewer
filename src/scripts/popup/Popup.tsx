@@ -45,20 +45,20 @@ const Popup = () => {
   const loadAllLinks = useCallback(() => {
     console.log("Updating all links");
     setIsLoading(true);
-    getBrowser().runtime.sendMessage({action: 'fetchAllLinksFromAllFolders'}).then((links) => {
+    getBrowser().runtime.sendMessage({action: 'fetchAllLinksFromAllFolders'}).then((links: ApiReturnType<Link[][]>) => {
       console.log("loadAllLinks -> linksByFolder: " + JSON.stringify(links));
       setStorageItem('lastUpdate', Date.now());
-      if(links) {
-        setLinksByFolder(links);
-        setStorageItem('linksByFolder', links);
+      if(links && links.success && links.data) {
+        setLinksByFolder(links.data);
+        setStorageItem('linksByFolder', links.data);
       }
       return getBrowser().runtime.sendMessage({action: 'fetchFolders'});
-    }).then((folders) => {
-      if(folders) {
-        setFolders(folders);
-        setStorageItem('allFolders', folders);
-      }
+    }).then((folders: ApiReturnType<Folder[]>) => {
       console.log("loadAllLinks -> allFolders: " + JSON.stringify(folders));
+      if(folders && folders.success && folders.data) {
+        setFolders(folders.data);
+        setStorageItem('allFolders', folders.data);
+      }
       setIsLoading(false);
     });
   }, []);
@@ -134,9 +134,9 @@ const Popup = () => {
       });
 
       return getBrowser().runtime.sendMessage({action: 'fetchTags'});
-    }).then((tags) => {
-      if(!!tags) {
-        setAllTags(tags);
+    }).then((tags: ApiReturnType<Tag[]>) => {
+      if(tags.success && tags.data) {
+        setAllTags(tags.data);
       }
       setShowAddLinkModal(true);
     });
@@ -151,9 +151,9 @@ const Popup = () => {
       parentId: 0,
     });
 
-    getBrowser().runtime.sendMessage({action: 'fetchTags'}).then((tags) => {
-      if(!!tags) {
-        setAllTags(tags);
+    getBrowser().runtime.sendMessage({action: 'fetchFolders'}).then((newFolders: ApiReturnType<Folder[]>) => {
+      if(newFolders.success && newFolders.data) {
+        setFolders(newFolders.data);
       }
       setShowAddFolderModal(true);
     });
@@ -162,12 +162,12 @@ const Popup = () => {
   const loadLinksForFolder = useCallback((folderId: number) => {
     console.log("loadLinksForFolder");
     setIsLoading(true);
-    getBrowser().runtime.sendMessage({action: 'fetchLinks', collectionId: folderId}).then((links) => {
-      if (links) {
+    getBrowser().runtime.sendMessage({action: 'fetchLinks', collectionId: folderId}).then((links: ApiReturnType<Link[]>) => {
+      if (links.success && links.data) {
         setLinksByFolder((prev) => {
           const newLinksByFolder = ({
             ...prev,
-            [folderId]: links,
+            [folderId]: links.data,
           });
           setStorageItem('linksByFolder', newLinksByFolder);
           console.log("loadLinksForFolder -> linksByFolder:" + JSON.stringify(newLinksByFolder));
@@ -257,7 +257,7 @@ const Popup = () => {
 
   const saveNewLink = (e: React.FormEvent) => {
     e.preventDefault();
-    getBrowser().runtime.sendMessage({action: 'saveLink', link: newLink}).then((result) => {
+    getBrowser().runtime.sendMessage({action: 'saveLink', link: newLink}).then((result: ApiReturnType<any>) => {
       if (result.success) {
           closeAddLinkModal();
           if(newLink.collectionId > 0) {
@@ -273,7 +273,7 @@ const Popup = () => {
 
   const saveNewFolder = (e: React.FormEvent) => {
     e.preventDefault();
-    getBrowser().runtime.sendMessage({action: 'createFolder', name: newFolder.name, parentId: newFolder.parentId}).then((result) => {
+    getBrowser().runtime.sendMessage({action: 'createFolder', name: newFolder.name, parentId: newFolder.parentId}).then((result: ApiReturnType<any>) => {
       if (result.success) {
           closeAddFolderModal();
           loadAllLinks();
@@ -286,8 +286,10 @@ const Popup = () => {
   const openEditLinkModal = useCallback((link: NewLink) => {
     setNewLink(link);
 
-    getBrowser().runtime.sendMessage({action: 'fetchTags'}).then((tags) => {
-      setAllTags(tags);
+    getBrowser().runtime.sendMessage({action: 'fetchTags'}).then((tags: ApiReturnType<Tag[]>) => {
+      if (tags.success && tags.data) {
+        setAllTags(tags.data);
+      }
       setShowEditLinkModal(true);
     });
   }, []);
@@ -295,9 +297,9 @@ const Popup = () => {
   const openEditFolderModal = useCallback((folder: Folder) => {
     setNewFolder(folder);
 
-    getBrowser().runtime.sendMessage({action: 'fetchFolders'}).then((newFolders) => {
-      if(newFolders) {
-        setFolders(newFolders);
+    getBrowser().runtime.sendMessage({action: 'fetchFolders'}).then((newFolders: ApiReturnType<Folder[]>) => {
+      if(newFolders.success && newFolders.data) {
+        setFolders(newFolders.data);
       }
       setShowEditFolderModal(true);
     });
@@ -310,7 +312,7 @@ const Popup = () => {
 
   const saveEditLink = (e: React.FormEvent) => {
     e.preventDefault();
-    getBrowser().runtime.sendMessage({action: 'updateLink', data: newLink, collectionOwnerId: folders.filter((folder) => folder.id === newLink.collectionId)[0].ownerId}).then((response) => {
+    getBrowser().runtime.sendMessage({action: 'updateLink', data: newLink, collectionOwnerId: folders.filter((folder) => folder.id == newLink.collectionId)[0].ownerId}).then((response: ApiReturnType<any>) => {
       if (response.success) {
         closeEditLinkModal();
         loadAllLinks();
@@ -322,12 +324,12 @@ const Popup = () => {
 
   const saveEditFolder = (e: React.FormEvent) => {
     e.preventDefault();
-    getBrowser().runtime.sendMessage({action: 'updateFolder', id: newFolder.id, name: newFolder.name, parentId: newFolder.parentId ?? 0}).then((response) => {
+    getBrowser().runtime.sendMessage({action: 'updateFolder', id: newFolder.id, name: newFolder.name, parentId: newFolder.parentId ?? 0}).then((response: ApiReturnType<any>) => {
       if (response.success) {
         closeEditFolderModal();
         loadAllLinks();
       } else {
-        alert('Error updating link. Please try again.');
+        alert('Error updating folder. Please try again.');
       }
     });
   };

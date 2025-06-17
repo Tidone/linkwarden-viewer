@@ -34,7 +34,7 @@ export const LinkItem = ({
   };
 
   const confirmDelete = () => {
-    getBrowser().runtime.sendMessage({action: 'deleteLink', id: link.id}).then((response) => {
+    getBrowser().runtime.sendMessage({action: 'deleteLink', id: link.id}).then((response: ApiReturnType<any>) => {
       if (response.success) {
         refreshData();
       } else {

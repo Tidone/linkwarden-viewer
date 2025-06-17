@@ -17,7 +17,7 @@ export const DeleteFolderModal = ({
 }: Props) => {
 
   const confirmDelete = () => {
-    getBrowser().runtime.sendMessage({action: 'deleteFolder', id: folder.id}).then((response) => {
+    getBrowser().runtime.sendMessage({action: 'deleteFolder', id: folder.id}).then((response: ApiReturnType<any>) => {
       if (response.success) {
         refreshData();
       } else {

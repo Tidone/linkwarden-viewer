@@ -69,25 +69,29 @@ const Options = () => {
 
   const handleRefresh = () => {
     setStatus({isError: false, text: 'Refreshing data...'});
-    getBrowser().runtime.sendMessage({action: 'clearErrorFlag'}).then(() =>
-      getBrowser().runtime.sendMessage({action: 'fetchAllLinksFromAllFolders'})
-    ).then((links) => {
+
+    getBrowser().runtime.sendMessage({action: 'fetchAllLinksFromAllFolders'})
+    .then((links: ApiReturnType<Link[]>) => {
       console.log(links);
-      if(links) {
-        setStorageItem('linksByFolder', links);
+      if(!links.success) {
+        setStatus({isError: true, text: 'Error refreshing data. Please check your settings.'});
+        setTimeout(() => setStatus({isError: false, text: ''}), 3000);
+        return;
+      }
+      if(links.data) {
+        setStorageItem('linksByFolder', links.data);
       }
       return getBrowser().runtime.sendMessage({action: 'fetchFolders'});
-    }).then((folders) => {
-      if(folders) {
-        setStorageItem('allFolders', folders);
-      }
-      return getBrowser().runtime.sendMessage({action: 'getErrorFlag'});
-    }).then((errorFlag) => {
-      if(!errorFlag) {
-        setStatus({isError: false, text: 'Data refreshed successfully.'});
-      } else {
+    }).then((folders: ApiReturnType<Folder[]>) => {
+      if(!folders.success) {
         setStatus({isError: true, text: 'Error refreshing data. Please check your settings.'});
+        setTimeout(() => setStatus({isError: false, text: ''}), 3000);
+        return;
       }
+      if(folders.data) {
+        setStorageItem('allFolders', folders.data);
+      }
+      setStatus({isError: false, text: 'Data refreshed successfully.'});
       setTimeout(() => setStatus({isError: false, text: ''}), 3000);
     }).catch(() => {
       setStatus({isError: true, text: 'Error refreshing data. Please check your settings.'});
