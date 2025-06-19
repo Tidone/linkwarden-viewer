@@ -1,4 +1,4 @@
-import { Folder, Link, NewLink, Tag } from "../utils/interfaces";
+import { Folder, Link, LinksByFolder, NewLink, Tag } from "../utils/interfaces";
 import { ApiReturnType, BookmarkManagerService } from "./bookmark-manager-service";
 
 interface FetchFolderInfo {
@@ -260,7 +260,7 @@ export class LinkwardenService implements BookmarkManagerService {
     }
   }
 
-  async fetchAllLinksFromAllFolders(): Promise<ApiReturnType<any>> {
+  async fetchAllLinksFromAllFolders(): Promise<ApiReturnType<LinksByFolder|any>> {
     const folders = await this.fetchFolders();
     let allLinks = {};
 

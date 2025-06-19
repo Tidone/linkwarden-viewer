@@ -7,6 +7,10 @@ export interface Link {
     folder: Folder;
 }
 
+export interface LinksByFolder {
+    [key: string]: Link[];
+}
+
 export interface Tag {
     id: number;
     name: string;

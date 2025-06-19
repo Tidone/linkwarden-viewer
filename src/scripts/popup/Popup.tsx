@@ -9,12 +9,12 @@ import { getBrowser, getCurrentTabInfo, getStorageItem, openOptions, setStorageI
 import { IconButton } from '@mui/material';
 import { DeleteFolderModal } from './components/DeleteFolderModal';
 import { AddFolderModal } from './components/AddFolderModal';
-import { Folder, Link, NewLink, Tag } from '../utils/interfaces';
+import { Folder, Link, LinksByFolder, NewLink, Tag } from '../utils/interfaces';
 import { ApiReturnType } from '../service-worker/bookmark-manager-service';
 
 const Popup = () => {
   const [folders, setFolders] = useState<Folder[]>([]);
-  const [linksByFolder, setLinksByFolder] = useState<Link[][]>([]);
+  const [linksByFolder, setLinksByFolder] = useState<LinksByFolder>({});
   const [openFolders, setOpenFolders] = useState(new Set<number>());
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddLinkModal, setShowAddLinkModal] = useState(false);
@@ -47,7 +47,7 @@ const Popup = () => {
   const loadAllLinks = useCallback(() => {
     console.log("Updating all links");
     setIsLoading(true);
-    getBrowser().runtime.sendMessage({action: 'fetchAllLinksFromAllFolders'}).then((links: ApiReturnType<Link[][]>) => {
+    getBrowser().runtime.sendMessage({action: 'fetchAllLinksFromAllFolders'}).then((links: ApiReturnType<LinksByFolder>) => {
       console.log("loadAllLinks -> linksByFolder: " + JSON.stringify(links));
       setStorageItem('lastUpdate', Date.now());
       if(links && links.success && links.data) {

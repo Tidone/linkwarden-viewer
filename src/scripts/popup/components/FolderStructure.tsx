@@ -1,12 +1,12 @@
 import React from 'react';
 import { FolderItem } from './FolderItem';
-import { Folder, Link, NewLink } from '@/scripts/utils/interfaces';
+import { Folder, Link, LinksByFolder, NewLink } from '@/scripts/utils/interfaces';
 
 interface Props {
   folders: Folder[];
   openFolders: Set<number>;
   toggleFolder: (id: number) => void;
-  linksByFolder: Link[][];
+  linksByFolder: LinksByFolder;
   isDarkMode: boolean;
   loadLinksForFolder: (id: number) => void;
   sortLinks: string;
