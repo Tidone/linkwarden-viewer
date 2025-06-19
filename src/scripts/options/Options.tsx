@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, Save, RefreshCw } from 'lucide-react';
 import { getBrowser, getStorageItem, setStorageItem } from '../utils/utils';
+import { ApiReturnType } from '../service-worker/bookmark-manager-service';
+import { Folder, Link } from '../utils/interfaces';
 
 const Options = () => {
   const [host, setHost] = useState('');

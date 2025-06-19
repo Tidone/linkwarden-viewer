@@ -1,3 +1,4 @@
+import { Folder, NewLink, Tag } from '@/scripts/utils/interfaces';
 import { getFullPathName } from '@/scripts/utils/utils';
 import React from 'react';
 import CreatableSelect from 'react-select/creatable';

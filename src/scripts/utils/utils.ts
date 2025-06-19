@@ -1,3 +1,5 @@
+import { Folder } from "./interfaces";
+
 export interface TabInfo {
   url: string;
   title: string;

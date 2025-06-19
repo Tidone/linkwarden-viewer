@@ -1,5 +1,7 @@
+import { ApiReturnType } from '@/scripts/service-worker/bookmark-manager-service';
+import { Link, NewLink } from '@/scripts/utils/interfaces';
 import { getBrowser } from '@/scripts/utils/utils';
-import { Edit3, LinkIcon, Trash2 } from 'lucide-react';
+import { Edit3, Trash2 } from 'lucide-react';
 import React, { MouseEventHandler, useState } from 'react';
 
 interface Props {

@@ -1,20 +1,21 @@
 import { FolderOpen, Folder, ChevronRight, Trash2, Edit3 } from 'lucide-react';
 import React, { useEffect } from 'react';
 import { LinkItem } from './LinkItem';
+import { Folder as FolderInterface, Link, NewLink } from '@/scripts/utils/interfaces';
 
 interface Props {
-  folder: Folder;
+  folder: FolderInterface;
   openFolders: Set<number>;
   toggleFolder: (id: number) => void;
   links: Link[];
-  subFolders: Folder[];
-  renderFolder: (folder: Folder) => React.JSX.Element;
+  subFolders: FolderInterface[];
+  renderFolder: (folder: FolderInterface) => React.JSX.Element;
   isDarkMode: boolean;
   loadLinksForFolder: (id: number) => void;
   sortLinks: string;
   showEditLinkModal: (link: NewLink) => void;
-  showEditFolderModal: (folder: Folder) => void;
-  showDeleteFolderModal: (folder: Folder) => void;
+  showEditFolderModal: (folder: FolderInterface) => void;
+  showDeleteFolderModal: (folder: FolderInterface) => void;
   canShowOverlayButtons: boolean;
   openLinksInNewTab: boolean;
 }

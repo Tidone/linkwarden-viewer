@@ -1,5 +1,6 @@
 import React from 'react';
 import { FolderItem } from './FolderItem';
+import { Folder, Link, NewLink } from '@/scripts/utils/interfaces';
 
 interface Props {
   folders: Folder[];

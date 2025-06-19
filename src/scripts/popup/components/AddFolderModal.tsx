@@ -1,3 +1,4 @@
+import { Folder } from '@/scripts/utils/interfaces';
 import { getFullPathName, getParentFolder } from '@/scripts/utils/utils';
 import React from 'react';
 

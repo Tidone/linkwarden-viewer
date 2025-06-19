@@ -1,5 +1,6 @@
 import { LinkwardenService } from './linkwarden-service';
 import { getBrowser, getStorageItems } from '../utils/utils';
+import { BookmarkManagerService } from './bookmark-manager-service';
 
 let host: string;
 let token: string;

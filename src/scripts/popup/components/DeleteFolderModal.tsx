@@ -1,6 +1,7 @@
+import { ApiReturnType } from '@/scripts/service-worker/bookmark-manager-service';
+import { Folder } from '@/scripts/utils/interfaces';
 import { getBrowser } from '@/scripts/utils/utils';
 import React from 'react';
-import CreatableSelect from 'react-select/creatable';
 
 interface Props {
   folder: Folder;

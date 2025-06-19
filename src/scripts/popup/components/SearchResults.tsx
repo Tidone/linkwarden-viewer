@@ -1,5 +1,6 @@
 import React from 'react';
 import { LinkItem } from './LinkItem';
+import { Link, NewLink } from '@/scripts/utils/interfaces';
 
 interface Props {
   links: Link[];

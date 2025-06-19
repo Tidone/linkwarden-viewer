@@ -1,9 +1,11 @@
-interface ApiReturnType<T> {
+import { Folder, Link, NewLink, Tag } from "../utils/interfaces";
+
+export interface ApiReturnType<T> {
     success: boolean;
     data: T;
 }
 
-interface BookmarkManagerService {
+export interface BookmarkManagerService {
     fetchAllLinksFromAllFolders(): Promise<ApiReturnType<{}>>;
     fetchFolders(): Promise<ApiReturnType<Folder[]>>;
     fetchLinks(collectionId: number): Promise<ApiReturnType<Link[]>>;

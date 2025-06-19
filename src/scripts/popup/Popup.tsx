@@ -9,6 +9,8 @@ import { getBrowser, getCurrentTabInfo, getStorageItem, openOptions, setStorageI
 import { IconButton } from '@mui/material';
 import { DeleteFolderModal } from './components/DeleteFolderModal';
 import { AddFolderModal } from './components/AddFolderModal';
+import { Folder, Link, NewLink, Tag } from '../utils/interfaces';
+import { ApiReturnType } from '../service-worker/bookmark-manager-service';
 
 const Popup = () => {
   const [folders, setFolders] = useState<Folder[]>([]);

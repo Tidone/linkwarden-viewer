@@ -1,3 +1,6 @@
+import { Folder, Link, NewLink, Tag } from "../utils/interfaces";
+import { ApiReturnType, BookmarkManagerService } from "./bookmark-manager-service";
+
 interface FetchFolderInfo {
   id: number;
   name: string;

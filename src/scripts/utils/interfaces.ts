@@ -1,4 +1,4 @@
-interface Link {
+export interface Link {
     id: number;
     name: string;
     url: string;
@@ -7,12 +7,12 @@ interface Link {
     folder: Folder;
 }
 
-interface Tag {
+export interface Tag {
     id: number;
     name: string;
 }
 
-interface Folder {
+export interface Folder {
     id: number;
     name: string;
     ownerId: number;
@@ -20,7 +20,7 @@ interface Folder {
     createdAt: string;
 }
 
-interface NewLink {
+export interface NewLink {
     id: number;
     url: string;
     title: string;
