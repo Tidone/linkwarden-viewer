@@ -58,6 +58,7 @@ export const AddFolderModal = ({
                 type="text"
                 id="name"
                 name="name"
+                required
                 maxLength={2048}
                 value={newFolder.name}
                 onChange={handleNewFolderChange}
