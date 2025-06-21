@@ -246,15 +246,16 @@ const Popup = () => {
 
   const handleTagChange = (newTags: string[]) => {
     console.log("handleTagChange: " + newTags);
-    newTags.forEach((newTag) => {
-      if(newTag.length <= 50 && allTags.filter((tag) => tag.name === newTag).length == 0) { // tag names can have a max length of 50 characters
+    const filteredNewTags = newTags.filter((tag) => tag.length <= 50);  // tag names can have a max length of 50 characters
+    filteredNewTags.forEach((newTag) => {
+      if(!allTags.some((tag) => tag.name === newTag)) { // add new elements to the list of all tags if they are not included yet
         setAllTags((prevAllTags) => {
           let newAllTags = [...prevAllTags, {id: 0, name: newTag}];
           return newAllTags;
         });
       }
     });
-    setNewLink({ ...newLink, tags: newTags });
+    setNewLink({ ...newLink, tags: filteredNewTags });
   };
 
   const saveNewLink = (e: React.FormEvent) => {
