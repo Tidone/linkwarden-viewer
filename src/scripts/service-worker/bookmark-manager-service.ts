@@ -3,6 +3,7 @@ import { Folder, Link, NewLink, Tag } from "../utils/interfaces";
 export interface ApiReturnType<T> {
     success: boolean;
     data: T;
+    additionalData?: any;
 }
 
 export interface BookmarkManagerService {

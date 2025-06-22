@@ -157,7 +157,7 @@ export class LinkwardenService implements BookmarkManagerService {
     while(true) {
       const result = await this._fetchLinksWithCursor(collectionId, cursor);
       if (!result.success) {
-        return {success: false, data: result.data};
+        return {success: false, data: result.data, additionalData: collectionId};
       }
       allLinks.push(...result.data);
 
@@ -172,7 +172,7 @@ export class LinkwardenService implements BookmarkManagerService {
       }
     }
 
-    return {success: true, data: allLinks};
+    return {success: true, data: allLinks, additionalData: collectionId};
   }
 
   async fetchTags(): Promise<ApiReturnType<Tag[]>> {
@@ -268,16 +268,15 @@ export class LinkwardenService implements BookmarkManagerService {
       return { success: false, data: folders.data };
     }
     try {
-      await Promise.all(
-        folders.data.map(async (folder) => {
-          const links = await this.fetchLinks(folder.id);
-          if(links.success) {
-            allLinks[folder.id] = links.data;
-          } else {
-            throw links.data;
-          }
-        }),
-      );
+      const allData = await Promise.all(folders.data.map((folder) => this.fetchLinks(folder.id)));
+
+      allData.forEach((data) => {
+        if (!data.success) {
+          throw data.data;
+        }
+        allLinks[data.additionalData] = data.data;
+      });
+
       return {success: true, data: allLinks};
     } catch (error) {
       console.error('Error fetching links: ', error);

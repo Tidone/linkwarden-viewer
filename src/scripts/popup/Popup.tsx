@@ -203,7 +203,7 @@ const Popup = () => {
 
 
   const filteredLinks = Object.values(linksByFolder).flat().filter(
-    (link: { name: string; url: string; tags?: { name: string }[] }) =>
+    (link) =>
       link.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       link.url.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (link.tags &&
