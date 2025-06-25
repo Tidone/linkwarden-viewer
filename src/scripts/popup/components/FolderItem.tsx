@@ -58,7 +58,7 @@ export const FolderItem = ({
   return (
     <div className="mb-2">
       <div
-        className={`flex items-center p-2 rounded-md cursor-pointer relative group ${
+        className={`flex items-center p-2 rounded-md cursor-pointer relative group transition-colors duration-200 ${
           isDarkMode
             ? 'bg-gray-800 hover:bg-gray-700'
             : 'bg-white hover:bg-gray-200'
