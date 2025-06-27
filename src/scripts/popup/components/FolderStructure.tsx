@@ -7,7 +7,6 @@ interface Props {
   openFolders: Set<number>;
   toggleFolder: (id: number) => void;
   linksByFolder: LinksByFolder;
-  isDarkMode: boolean;
   loadLinksForFolder: (id: number) => void;
   sortLinks: string;
   sortFolders: string;
@@ -23,7 +22,6 @@ export const FolderStructure = ({
   openFolders,
   toggleFolder,
   linksByFolder,
-  isDarkMode,
   loadLinksForFolder,
   sortLinks,
   sortFolders,
@@ -54,7 +52,6 @@ export const FolderStructure = ({
       links={linksByFolder[folder.id] || []}
       subFolders={sortedFolders.filter((f) => f.parentId === folder.id)}
       renderFolder={renderFolder}
-      isDarkMode={isDarkMode}
       loadLinksForFolder={loadLinksForFolder}
       sortLinks={sortLinks}
       showEditLinkModal={showEditLinkModal}

@@ -8,7 +8,6 @@ interface Props {
   handleNewFolderChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   saveNewFolder: (e: React.FormEvent) => void;
   closeAddFolderModal: () => void;
-  isDarkMode: boolean;
 }
 
 export const AddFolderModal = ({
@@ -17,7 +16,6 @@ export const AddFolderModal = ({
   handleNewFolderChange,
   saveNewFolder,
   closeAddFolderModal,
-  isDarkMode,
 }: Props) => {
 
   // Filter out any folders that have the edited folder as an extended parent to make sure we don't move a folder into a child of itself.
@@ -44,9 +42,7 @@ export const AddFolderModal = ({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-1">
       <div
-        className={`rounded-lg w-full max-w-md ${
-          isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'
-        }`}
+        className={'rounded-lg w-full max-w-md bg-white text-black dark:bg-gray-800 dark:text-white'}
       >
         <form onSubmit={saveNewFolder} className="p-1">
           <div className="space-y-4">
@@ -62,11 +58,8 @@ export const AddFolderModal = ({
                 maxLength={2048}
                 value={newFolder.name}
                 onChange={handleNewFolderChange}
-                className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs ${
-                  isDarkMode
-                    ? 'bg-gray-700 border-gray-600 text-white'
-                    : 'bg-white border-gray-300 text-black'
-                }`}
+                className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs
+                  bg-white border-gray-300 text-black dark:bg-gray-700 dark:border-gray-600 dark:text-white`}
                 placeholder="Folder Name"
               />
             </div>
@@ -84,11 +77,8 @@ export const AddFolderModal = ({
                   value={newFolder.parentId ?? 0}
                   onChange={handleNewFolderChange}
                   required
-                  className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs ${
-                    isDarkMode
-                      ? 'bg-gray-700 border-gray-600 text-white'
-                      : 'bg-white border-gray-300 text-black'
-                  }`}
+                  className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs
+                    bg-white border-gray-300 text-black dark:bg-gray-700 dark:border-gray-600 dark:text-white`}
                 >
                   <option key={0} value={0}></option>
                   {sortedFolders
@@ -105,17 +95,15 @@ export const AddFolderModal = ({
             <button
               type="button"
               onClick={closeAddFolderModal}
-              className={`px-1 py-1 border rounded-md text-sm font-medium ${
-                isDarkMode
-                  ? 'border-gray-600 text-gray-300 hover:bg-gray-700'
-                  : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
+              className={`px-1 py-1 border rounded-md text-sm font-medium border-gray-300 text-gray-700 hover:bg-gray-50
+                dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-1 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className={`px-1 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white
+                bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
             >
               Save
             </button>

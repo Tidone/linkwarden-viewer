@@ -7,7 +7,6 @@ import React, { MouseEventHandler, useState } from 'react';
 interface Props {
   link: Link;
   refreshData: () => void;
-  isDarkMode: boolean;
   showEditLinkModal: (link: NewLink) => void;
   canShowOverlayButtons: boolean;
   openLinksInNewTab: boolean;
@@ -23,7 +22,6 @@ const MouseButtons = {
 export const LinkItem = ({
   link,
   refreshData,
-  isDarkMode,
   showEditLinkModal,
   canShowOverlayButtons,
   openLinksInNewTab,
@@ -74,9 +72,7 @@ export const LinkItem = ({
 
   return (
     <div
-      className={`flex flex-col p-2 rounded-md mb-2 relative group ${
-        isDarkMode ? 'bg-gray-800' : 'bg-white'
-      }`}
+      className={'flex flex-col p-2 rounded-md mb-2 relative group bg-white dark:bg-gray-800'}
     >
       <div className='cursor-pointer' onMouseUp={onMouseUp}>
         <div className="flex items-center text-sm">
@@ -99,9 +95,7 @@ export const LinkItem = ({
       </div>
       {showConfirmDelete && (
         <div
-          className={`absolute inset-0 ${
-            isDarkMode ? 'bg-gray-800/90' : 'bg-white/90'
-          } flex items-center justify-center`}
+          className={'absolute inset-0 bg-white/90 dark:bg-gray-800/90 flex items-center justify-center'}
         >
           <div className="text-center text-sm">
             <p className="mb-1">Are you sure you want to delete this link?</p>
@@ -113,11 +107,7 @@ export const LinkItem = ({
             </button>
             <button
               onClick={cancelDelete}
-              className={`px-3 py-1 rounded-md ${
-                isDarkMode
-                  ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                  : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
-              }`}
+              className={'px-3 py-1 rounded-md bg-gray-300 text-gray-700 hover:bg-gray-400 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'}
             >
               Cancel
             </button>
@@ -135,14 +125,14 @@ export const LinkItem = ({
               collectionId: link.folder.id,
               tags: link.tags.map((tag) => tag.name),
             })}
-            className={`text-gray-400 ${isDarkMode ? 'bg-gray-800/90' : 'bg-white/90'} hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200`}
+            className={'text-gray-400 bg-white/90 dark:bg-gray-800/90 hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200'}
             title="Edit link"
           >
             <Edit3 size={24} />
           </button>
             <button
               onClick={handleDelete}
-              className={`text-gray-400 ${isDarkMode ? 'bg-gray-800/90' : 'bg-white/90'} hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200`}
+              className={'text-gray-400 bg-white/90 dark:bg-gray-800/90 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200'}
               title="Delete link"
             >
               <Trash2 size={24} />

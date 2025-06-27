@@ -36,7 +36,6 @@ const Popup = () => {
     tags: [],
   });
   const [allTags, setAllTags] = useState<Tag[]>([]);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [hasValidConfiguration, setHasValidConfiguration] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [linkSort, setLinkSort] = useState("name_ascending");
@@ -108,16 +107,7 @@ const Popup = () => {
 
     timerId = setInterval(() => loadAllLinks(), updateInterval);
 
-    const darkModeMediaQuery = window.matchMedia(
-      '(prefers-color-scheme: dark)',
-    );
-    setIsDarkMode(darkModeMediaQuery.matches);
-
-    const listener = (e) => setIsDarkMode(e.matches);
-    darkModeMediaQuery.addEventListener("change", listener);
-
     return () => {
-      darkModeMediaQuery.removeEventListener("change", listener);
       clearInterval(timerId);
     };
   }, [loadAllLinks]);
@@ -348,7 +338,7 @@ const Popup = () => {
   if(hasValidConfiguration) {
     return (
       <div
-        className={`w-[500px] ${isAnyModalShown ? 'h-[500px]' : ''} p-4 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'}`}
+        className={`w-[500px] ${isAnyModalShown ? 'h-[500px]' : ''} p-4 bg-gray-100 text-black dark:bg-gray-900 dark:text-white`}
       >
         <div className="flex items-center">
           <div className="relative flex-grow">
@@ -357,11 +347,8 @@ const Popup = () => {
               placeholder="Search links..."
               value={searchQuery}
               onChange={handleSearch}
-              className={`w-full pl-10 pr-4 py-2 rounded-md border text-sm ${
-                isDarkMode
-                  ? 'bg-gray-800 border-gray-700 text-white'
-                  : 'bg-white border-gray-300 text-black'
-              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              className={`w-full pl-10 pr-4 py-2 rounded-md border text-sm bg-white border-gray-300 text-black
+                dark:bg-gray-800 dark:border-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
             />
             <Search
               className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -371,68 +358,52 @@ const Popup = () => {
           <button
             onClick={openAddLinkModal}
             title='Add link'
-            className={`ml-2 p-2 rounded-md ${
-              isDarkMode
-                ? 'bg-blue-600 hover:bg-blue-700'
-                : 'bg-blue-500 hover:bg-blue-600'
-            } text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+            className={`ml-2 p-2 rounded-md bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700
+              text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
           >
             <Plus size={20} />
           </button>
           <button
             onClick={openAddFolderModal}
             title='Add new folder'
-            className={`ml-2 p-2 rounded-md ${
-              isDarkMode
-                ? 'bg-blue-600 hover:bg-blue-700'
-                : 'bg-blue-500 hover:bg-blue-600'
-            } text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+            className={`ml-2 p-2 rounded-md bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700
+              text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
           >
             <FolderPlus size={20} />
           </button>
           <button
             onClick={loadAllLinks}
             title='Refresh'
-            className={`ml-2 p-2 rounded-md ${
-              isDarkMode
-                ? 'bg-gray-800 hover:bg-gray-700'
-                : 'bg-gray-200 hover:bg-gray-300'
-            } focus:outline-none focus:ring-2 focus:ring-gray-500`}
+            className={`ml-2 p-2 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700
+              focus:outline-none focus:ring-2 focus:ring-gray-500`}
           >
             <RefreshCcw size={20} />
           </button>
           <button
             onClick={openOptions}
             title='Open Settings'
-            className={`ml-2 p-2 rounded-md ${
-              isDarkMode
-                ? 'bg-gray-800 hover:bg-gray-700'
-                : 'bg-gray-200 hover:bg-gray-300'
-            } focus:outline-none focus:ring-2 focus:ring-gray-500`}
+            className={`ml-2 p-2 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700
+              focus:outline-none focus:ring-2 focus:ring-gray-500`}
           >
             <Settings size={20} />
           </button>
           <IconButton
             onClick={openLinkwarden}
             title='Open LinkWarden Dashboard'
-            className={`ml-2 p-2 rounded-md ${
-              isDarkMode
-                ? 'bg-gray-800 hover:bg-gray-700'
-                : 'bg-gray-200 hover:bg-gray-300'
-            } focus:outline-none focus:ring-2 focus:ring-gray-500`}
+            className={`ml-2 p-2 rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700
+              focus:outline-none focus:ring-2 focus:ring-gray-500`}
           >
             <img src='/assets/icon-48.png' width='32' height='32' alt='Open Linkwarden' />
           </IconButton>
         </div>
         <div className="flex justify-center mb-4 h-[4px]">
-          <BarLoader width={"350px"} loading={isLoading} color={isDarkMode ? '#9d9d9d': '#000000'} />
+          <BarLoader width={"350px"} loading={isLoading} color={'#9d9d9d'} />
         </div>
         <div className="max-h-96 overflow-y-auto">
           {searchQuery ? (
             <SearchResults
               links={filteredLinks}
               loadLinksForFolder={loadLinksForFolder}
-              isDarkMode={isDarkMode}
               sortLinks={linkSort}
               showEditLinkModal={openEditLinkModal}
               canShowOverlayButtons={!isAnyModalShown}
@@ -444,7 +415,6 @@ const Popup = () => {
               openFolders={openFolders}
               toggleFolder={toggleFolder}
               linksByFolder={linksByFolder}
-              isDarkMode={isDarkMode}
               loadLinksForFolder={loadLinksForFolder}
               sortLinks={linkSort}
               sortFolders={folderSort}
@@ -465,7 +435,6 @@ const Popup = () => {
             handleTagChange={handleTagChange}
             saveNewLink={saveNewLink}
             closeAddLinkModal={closeAddLinkModal}
-            isDarkMode={isDarkMode}
           />
         )}
         {showEditLinkModal && (
@@ -477,7 +446,6 @@ const Popup = () => {
             handleTagChange={handleTagChange}
             saveNewLink={saveEditLink}
             closeAddLinkModal={closeEditLinkModal}
-            isDarkMode={isDarkMode}
           />
         )}
         {showAddFolderModal && (
@@ -487,7 +455,6 @@ const Popup = () => {
             handleNewFolderChange={handleNewFolderChange}
             saveNewFolder={saveNewFolder}
             closeAddFolderModal={closeAddFolderModal}
-            isDarkMode={isDarkMode}
           />
         )}
         {showDeleteFolderModal && (
@@ -495,7 +462,6 @@ const Popup = () => {
             folder={newFolder}
             refreshData={loadAllLinks}
             closeModal={closeDeleteFolderModal}
-            isDarkMode={isDarkMode}
           />
         )}
         {showEditFolderModal && (
@@ -505,7 +471,6 @@ const Popup = () => {
             handleNewFolderChange={handleNewFolderChange}
             saveNewFolder={saveEditFolder}
             closeAddFolderModal={closeEditFolderModal}
-            isDarkMode={isDarkMode}
           />
         )}
       </div>
@@ -513,7 +478,7 @@ const Popup = () => {
   }
   else {
     return (
-    <div style={{textAlign:"center"}} className={`w-96 p-4 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'}`}>
+    <div style={{textAlign:"center"}} className={'w-96 p-4 bg-gray-100 text-black dark:bg-gray-900 dark:text-white'}>
       <div style={{fontSize:"16px"}}>Please configure the extension first!</div>
       <br></br>
       <Button variant="contained" onClick={openOptions}>Open Options</Button>

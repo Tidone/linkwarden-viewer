@@ -6,8 +6,4 @@ import Options from './Options';
 const container = document.getElementById('options-root');
 const root = createRoot(container!);
 
-root.render(
-  <React.StrictMode>
-    <Options />
-  </React.StrictMode>,
-);
+root.render(<Options />);

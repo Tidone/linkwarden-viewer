@@ -8,7 +8,6 @@ const Options = () => {
   const [host, setHost] = useState('');
   const [token, setToken] = useState('');
   const [status, setStatus] = useState<{isError: boolean; text: string;}>({isError: false, text: ''});
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [showToken, setShowToken] = useState(false);
   const [linkSort, setLinkSort] = useState('name_ascending');
   const [folderSort, setFolderSort] = useState('name_ascending');
@@ -38,16 +37,6 @@ const Options = () => {
         setOpenLinksInNewTab(value);
       }
     });
-
-    const darkModeMediaQuery = window.matchMedia(
-      '(prefers-color-scheme: dark)',
-    );
-    setIsDarkMode(darkModeMediaQuery.matches);
-
-    const listener = (e) => setIsDarkMode(e.matches);
-    darkModeMediaQuery.addEventListener('change', listener);
-
-    return () => darkModeMediaQuery.removeEventListener('change', listener);
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -104,22 +93,21 @@ const Options = () => {
   const toggleShowToken = () => setShowToken(!showToken);
 
   const inputClass = `mt-1 block w-full px-3 py-2 text-sm rounded-md shadow-sm transition duration-150 ease-in-out
-        ${
-          isDarkMode
-            ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-400 focus:ring focus:ring-blue-400 focus:ring-opacity-50'
-            : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50'
-        }`;
+    bg-white border-gray-300 text-gray-900 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50
+    dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-blue-400 dark:focus:ring dark:focus:ring-blue-400 dark:focus:ring-opacity-50`;
+
+  const labelClassNames = 'block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300';
 
   return (
     <div
-      className={`min-h-screen py-12 px-4 sm:px-6 lg:px-8 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'}`}
+      className={'min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white'}
     >
       <div
-        className={`max-w-lg mx-auto ${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-lg overflow-hidden`}
+        className={'max-w-lg mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden'}
       >
         <div className="px-8 py-10">
           <h1
-            className={`text-3xl font-bold text-center mb-8 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}
+            className={'text-3xl font-bold text-center mb-8 text-blue-600 dark: text-blue-400'}
           >
             Linkwarden Viewer Options
           </h1>
@@ -127,7 +115,7 @@ const Options = () => {
             <div>
               <label
                 htmlFor="host"
-                className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                className={labelClassNames}
               >
                 Host
               </label>
@@ -144,7 +132,7 @@ const Options = () => {
             <div>
               <label
                 htmlFor="token"
-                className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                className={labelClassNames}
               >
                 API Token
               </label>
@@ -165,11 +153,11 @@ const Options = () => {
                 >
                   {showToken ? (
                     <EyeOff
-                      className={`h-5 w-5 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
+                      className={'h-5 w-5 text-gray-500 dark:text-gray-400'}
                     />
                   ) : (
                     <Eye
-                      className={`h-5 w-5 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
+                      className={'h-5 w-5 text-gray-500 dark:text-gray-400'}
                     />
                   )}
                 </button>
@@ -178,7 +166,7 @@ const Options = () => {
             <div>
               <label
                 htmlFor="linkSort"
-                className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                className={labelClassNames}
               >
                 Sort Links
               </label>
@@ -187,11 +175,8 @@ const Options = () => {
                 id="linkSort"
                 value={linkSort}
                 onChange={(e) => {setLinkSort(e.target.value)}}
-                className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm ${
-                  isDarkMode
-                    ? 'bg-gray-700 border-gray-600 text-white'
-                    : 'bg-white border-gray-300 text-black'
-                }`}
+                className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm
+                  bg-white border-gray-300 text-black dark:bg-gray-700 dark:border-gray-600 dark:text-white`}
               >
                 <option key="name_ascending" value="name_ascending">Name Ascending</option>
                 <option key="name_descending" value="name_descending">Name Descending</option>
@@ -202,7 +187,7 @@ const Options = () => {
             <div>
               <label
                 htmlFor="folderSort"
-                className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                className={labelClassNames}
               >
                 Sort Folders
               </label>
@@ -211,11 +196,8 @@ const Options = () => {
                 id="folderSort"
                 value={folderSort}
                 onChange={(e) => {setFolderSort(e.target.value)}}
-                className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm ${
-                  isDarkMode
-                    ? 'bg-gray-700 border-gray-600 text-white'
-                    : 'bg-white border-gray-300 text-black'
-                }`}
+                className={`w-full px-1 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm
+                  bg-white border-gray-300 text-black dark:bg-gray-700 dark:border-gray-600 dark:text-white`}
               >
                 <option key="name_ascending" value="name_ascending">Name Ascending</option>
                 <option key="name_descending" value="name_descending">Name Descending</option>
@@ -232,7 +214,7 @@ const Options = () => {
               />
               <label
                 htmlFor='openLinksInNewTab'
-                className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                className={labelClassNames}
               >
                 Always open Links in new Tabs
               </label>
@@ -240,11 +222,8 @@ const Options = () => {
             <div className="flex space-x-4 pt-4">
               <button
                 type="submit"
-                className={`flex-1 flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                  isDarkMode
-                    ? 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'
-                    : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'
-                }`}
+                className={`flex-1 flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm
+                  font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500`}
               >
                 <Save className="mr-2 h-4 w-4" />
                 Save
@@ -252,11 +231,8 @@ const Options = () => {
               <button
                 type="button"
                 onClick={handleRefresh}
-                className={`flex-1 flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                  isDarkMode
-                    ? 'bg-green-600 hover:bg-green-700 focus:ring-green-500'
-                    : 'bg-green-600 hover:bg-green-700 focus:ring-green-500'
-                }`}
+                className={`flex-1 flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm
+                  font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-green-600 hover:bg-green-700 focus:ring-green-500`}
               >
                 <RefreshCw className="mr-2 h-4 w-4" />
                 Refresh Data
@@ -266,9 +242,7 @@ const Options = () => {
           {status.text && (
             <div
               className={`mt-6 p-3 rounded-md text-center text-sm ${
-                isDarkMode
-                  ? status.isError ? 'bg-red-900 text-red-200' : 'bg-blue-900 text-blue-200'
-                  : status.isError ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
+                status.isError ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
               }`}
             >
               {status.text}

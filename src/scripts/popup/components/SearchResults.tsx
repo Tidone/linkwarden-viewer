@@ -5,7 +5,6 @@ import { Link, NewLink } from '@/scripts/utils/interfaces';
 interface Props {
   links: Link[];
   loadLinksForFolder: (id: number) => void;
-  isDarkMode: boolean;
   sortLinks: string;
   showEditLinkModal: (link: NewLink) => void;
   canShowOverlayButtons: boolean;
@@ -15,7 +14,6 @@ interface Props {
 export const SearchResults = ({
   links,
   loadLinksForFolder,
-  isDarkMode,
   sortLinks,
   showEditLinkModal,
   canShowOverlayButtons,
@@ -40,7 +38,6 @@ export const SearchResults = ({
           link={link}
           showCollectionName={true}
           refreshData={() => loadLinksForFolder(link.folder.id)}
-          isDarkMode={isDarkMode}
           showEditLinkModal={showEditLinkModal}
           canShowOverlayButtons={canShowOverlayButtons}
           openLinksInNewTab={openLinksInNewTab}

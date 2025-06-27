@@ -7,14 +7,12 @@ interface Props {
   folder: Folder;
   refreshData: () => void;
   closeModal: () => void;
-  isDarkMode: boolean;
 }
 
 export const DeleteFolderModal = ({
   folder,
   refreshData,
   closeModal,
-  isDarkMode,
 }: Props) => {
 
   const confirmDelete = () => {
@@ -35,9 +33,7 @@ export const DeleteFolderModal = ({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-1">
       <div
-        className={`rounded-lg w-full max-w-md ${
-          isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'
-        }`}
+        className={'rounded-lg w-full max-w-md bg-white text-black dark:bg-gray-800 dark:text-white'}
       >
         <div className="p-1 text-center text-sm">
           <p className="mb-2">Are you sure you want to delete this folder?</p>
@@ -50,11 +46,7 @@ export const DeleteFolderModal = ({
           </button>
           <button
             onClick={cancelDelete}
-            className={`px-3 py-1 rounded-md ${
-              isDarkMode
-                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
-            }`}
+            className={'px-3 py-1 rounded-md bg-gray-300 text-gray-700 hover:bg-gray-400 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'}
           >
             Cancel
           </button>

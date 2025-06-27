@@ -1,4 +1,44 @@
 @import "tailwindcss";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+
+.custom-react-select-container .custom-react-select__control {
+  @apply bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500;
+}
+
+.custom-react-select-container .custom-react-select__menu {
+  @apply bg-white dark:bg-gray-700 text-black dark:text-white text-sm;
+}
+
+.custom-react-select-container .custom-react-select__input {
+  @apply bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600;
+}
+
+.custom-react-select-container .custom-react-select__option {
+  @apply text-black text-xs dark:text-white bg-white dark:bg-gray-700;
+}
+
+.custom-react-select-container .custom-react-select__option--is-focused {
+  @apply bg-gray-300 dark:bg-gray-800;
+}
+
+.custom-react-select-container .custom-react-select__input-container {
+  @apply text-black dark:text-white;
+}
+
+.custom-react-select-container .custom-react-select__multi-value {
+  @apply bg-gray-200 dark:bg-gray-800 border-gray-300 dark:border-gray-600;
+}
+
+.custom-react-select-container .custom-react-select__multi-value__label {
+  @apply text-black dark:text-white text-xs;
+}
+
+.custom-react-select-container .custom-react-select__multi-value__remove {
+  @apply hover:bg-gray-300 dark:hover:bg-gray-900;
+}
+
+.custom-react-select-container .custom-react-select__dropdown-indicator,
+.custom-react-select-container .custom-react-select__clear-indicator,
+.custom-react-select-container .custom-react-select__placeholder {
+  @apply text-black dark:text-white;
+}
