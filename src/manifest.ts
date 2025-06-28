@@ -18,15 +18,11 @@ interface ManifestChrome {
     service_worker: string;
     type: string;
   };
-  host_permissions?: string[];
+  host_permissions: string[];
   icons: {
     [key: number]: string;
   };
   permissions: string[];
-  content_scripts: Array<{
-    matches: string[];
-    js: string[];
-  }>;
   web_accessible_resources?: Array<{
     matches: string[];
     resources: string[];
@@ -107,12 +103,7 @@ const createBaseChromeManifest = async (): Promise<ManifestChrome> => {
         128: './assets/icon-128.png',
       },
       permissions: ['webRequest', 'storage', 'alarms', 'tabs', 'activeTab'],
-      content_scripts: [
-        {
-          matches: ['<all_urls>'],
-          js: ['./js/content.js'],
-        },
-      ],
+      host_permissions: ["*://*/*"],
       commands: {
         refresh_extension: {
           suggested_key: {
