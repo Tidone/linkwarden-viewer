@@ -8,24 +8,27 @@
 4. Add/Delete/Modify tags for each link.
 5. Add/Delete/Modify folders (collections).
 
-## Installation
-
-### Chrome
+## Build
 
 1. Clone the repository.
 2. Run `yarn install`.
 3. Run `TARGET_BROWSER=CHROME yarn build` or `TARGET_BROWSER=FIREFOX yarn build` to build the extension files.
-4. Install the extension:
-   1. Open Chrome and go to `chrome://extensions`.
-   2. Enable Developer mode by toggling the switch in the top right corner.
-   3. Click on `Load unpacked` and select the `dist` folder in the cloned repository.
+
+## Installation
+
+### Chrome
+
+1. Build the extension
+2. Open Chrome and go to `chrome://extensions`.
+3. Enable Developer mode by toggling the switch in the top right corner.
+4. Click on `Load unpacked` and select the `dist` folder in the cloned repository.
 
 ### Firefox
 
 1. Download the signed addon file from the latest github release.
 2. Open Firefox and go to `about:addons`.
 3. Go to `Settings (gear symbol in the top right corner of the page) -> Install Add-On From File`
-4. Select the `extension.zip` file
+4. Select the `extension.xpi` file
 
 ## Demonstration
 
@@ -36,7 +39,7 @@
 | <img src="docs/Popup_large.jpg" width="50%" height="50%">        | Popup with all folders opened, scrollable page <br> One link has tags |
 | <img src="docs/Popup_hover_folder.jpg" width="50%" height="50%"> | Hovering over a folder to show the edit and delete buttons            |
 | <img src="docs/Popup_hover_link.jpg" width="50%" height="50%">   | Hovering over a link to show the edit and delete buttons              |
-| <img src="docs/Popup_new_link.jpg" width="50%" height="50%">     | Adding a new link, or editing an old one                              |
+| <img src="docs/Popup_edit_link.jpg" width="50%" height="50%">    | Adding a new link, or editing an old one                              |
 
 ## Feature Status
 
