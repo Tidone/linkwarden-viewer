@@ -25,6 +25,10 @@
   @apply text-black dark:text-white;
 }
 
+.custom-react-select-container .custom-react-select__value-container {
+  @apply text-xs;
+}
+
 .custom-react-select-container .custom-react-select__multi-value {
   @apply bg-gray-200 dark:bg-gray-800 border-gray-300 dark:border-gray-600;
 }
