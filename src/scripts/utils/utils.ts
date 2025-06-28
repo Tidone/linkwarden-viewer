@@ -62,3 +62,20 @@ export function getFullPathName(allFolders: Folder[], targetFolder: Folder) {
 	}
 	return targetFolder.name;
 }
+
+export const defaultFolderColor = '#0ea5e9';
+
+export function normalizeColor(color: string) {
+  if (!color || !/^#([A-Fa-f0-9]{3}$|[A-Fa-f0-9]{6}$|[A-Fa-f0-9]{8}$)/.test(color)) {
+    return defaultFolderColor;
+  }
+
+  if (color.length == 9) {
+    return color.substring(0, color.length-2);
+  }
+  if (color.length == 4) {
+    return '#' + color[1] + color[1] + color[2] + color[2] + color[3] + color[3];
+  }
+
+  return color;
+}

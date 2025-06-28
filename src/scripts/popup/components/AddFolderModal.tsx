@@ -35,9 +35,9 @@ export const AddFolderModal = ({
   };
 
   const filteredFolders = newFolder.id !== 0 ? allFolders.filter((folder) => checkParentsForPotentialLoop(folder, newFolder.id)) : allFolders;
-  const sortedFolders: Folder[] = filteredFolders.map((folder) =>
-     ({id: folder.id, name: getFullPathName(allFolders, folder), ownerId: folder.ownerId, createdAt: folder.createdAt, parentId: folder.parentId})
-  ).sort((a, b) => a.name.localeCompare(b.name));
+  const sortedFolders: Folder[] = filteredFolders
+    .map((folder) => ({...folder, name: getFullPathName(allFolders, folder)}))
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-1">

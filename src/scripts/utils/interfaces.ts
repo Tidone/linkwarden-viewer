@@ -22,6 +22,9 @@ export interface Folder {
     ownerId: number;
     parentId?: number;
     createdAt: string;
+    icon?: string;
+    iconWeight?: string;
+    color: string;
 }
 
 export interface NewLink {

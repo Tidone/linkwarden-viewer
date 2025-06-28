@@ -47,7 +47,8 @@ export default defineConfig({
         rollupOptions: {
             input: rollupInput,
             output: outputOptions
-        }
+        },
+        chunkSizeWarningLimit:5500
     },
     plugins: [
         AutoImport({

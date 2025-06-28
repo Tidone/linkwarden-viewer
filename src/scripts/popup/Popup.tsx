@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import { AddLinkModal } from './components/AddLinkModal';
 import { FolderStructure } from './components/FolderStructure';
 import { SearchResults } from './components/SearchResults';
-import { getBrowser, getCurrentTabInfo, getStorageItem, openOptions, setStorageItem } from '../utils/utils';
+import { defaultFolderColor, getBrowser, getCurrentTabInfo, getStorageItem, openOptions, setStorageItem } from '../utils/utils';
 import { IconButton } from '@mui/material';
 import { DeleteFolderModal } from './components/DeleteFolderModal';
 import { AddFolderModal } from './components/AddFolderModal';
@@ -26,7 +26,8 @@ const Popup = () => {
     id: 0,
     name: '',
     createdAt: '',
-    ownerId: 0
+    ownerId: 0,
+    color: defaultFolderColor
   });
   const [newLink, setNewLink] = useState<NewLink>({
     id: 0,
@@ -59,6 +60,17 @@ const Popup = () => {
       if(folders && folders.success && folders.data) {
         setFolders(folders.data);
         setStorageItem('allFolders', folders.data);
+        setOpenFolders((prevOpenFolders) => {
+          // clean up the list of open folders in case a folder or its parent was deleted
+          const newOpenFolders = new Set(prevOpenFolders);
+          prevOpenFolders.forEach((folder) => {
+            if(!folders.data.find((f) => f.id == folder)) {
+              newOpenFolders.delete(folder);
+            }
+          });
+          setStorageItem('openFolders', Array.from(newOpenFolders));
+          return newOpenFolders;
+        });
       }
       setIsLoading(false);
     });
@@ -141,6 +153,7 @@ const Popup = () => {
       createdAt: '',
       ownerId: 0,
       parentId: 0,
+      color: defaultFolderColor
     });
 
     getBrowser().runtime.sendMessage({action: 'fetchFolders'}).then((newFolders: ApiReturnType<Folder[]>) => {

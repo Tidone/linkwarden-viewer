@@ -1,4 +1,5 @@
 import { Folder, Link, LinksByFolder, NewLink, Tag } from "../utils/interfaces";
+import { normalizeColor } from "../utils/utils";
 import { ApiReturnType, BookmarkManagerService } from "./bookmark-manager-service";
 
 interface FetchFolderInfo {
@@ -7,6 +8,9 @@ interface FetchFolderInfo {
   ownerId: number;
   parentId: number;
   createdAt: string;
+  icon?: string;
+  iconWeight?: string;
+  color: string;
 }
 
 interface FetchFoldersResponse {
@@ -28,12 +32,7 @@ interface FetchLinksResponse {
       id: number;
       name: string;
     }[];
-    collection: {
-      id: number;
-      name: string;
-      ownerId: number;
-      createdAt: string;
-    };
+    collection: FetchFolderInfo;
   }[];
 }
 
@@ -94,7 +93,16 @@ export class LinkwardenService implements BookmarkManagerService {
       if(response.status !== 200) {
         throw 'Could not fetch folders: ' + data.response;
       }
-      const result: Folder[] = data.response.map((value) => ({id: value.id, name: value.name, ownerId: value.ownerId, parentId: value.parentId, createdAt: value.createdAt}));
+      const result: Folder[] = data.response.map((value) => ({
+        id: value.id,
+        name: value.name,
+        ownerId: value.ownerId,
+        parentId: value.parentId,
+        createdAt: value.createdAt,
+        icon: value.icon,
+        iconWeight: value.iconWeight,
+        color: normalizeColor(value.color)
+      }));
       return {success: true, data: result};
     } catch (error) {
       console.error('Error fetching folders: ', error);
@@ -140,7 +148,15 @@ export class LinkwardenService implements BookmarkManagerService {
         url: value.url,
         createdAt: value.importDate || value.createdAt, // the importDate is set if an entry is imported into LinkWarden, it is the date when the link was saved the first time
         tags: value.tags.map((tag) => ({id: tag.id, name: tag.name})),
-        folder: ({id: value.collection.id, name: value.collection.name, ownerId: value.collection.ownerId, createdAt: value.collection.createdAt})
+        folder: ({
+          id: value.collection.id,
+          name: value.collection.name,
+          ownerId: value.collection.ownerId,
+          createdAt: value.collection.createdAt,
+          icon: value.collection.icon,
+          iconWeight: value.collection.iconWeight,
+          color: normalizeColor(value.collection.color)
+        })
       }));
       return {success: true, data: result};
     } catch (error) {
