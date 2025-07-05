@@ -88,6 +88,7 @@ export class LinkwardenService implements BookmarkManagerService {
         headers: {
           Authorization: `Bearer ${this.token}`,
         },
+        credentials: "omit",
       });
       const data: FetchFoldersResponse = await response.json();
       if(response.status !== 200) {
@@ -116,6 +117,7 @@ export class LinkwardenService implements BookmarkManagerService {
         headers: {
           Authorization: `Bearer ${this.token}`,
         },
+        credentials: "omit",
       });
       const data: FetchFolderResponse = await response.json();
       if(response.status !== 200) {
@@ -136,6 +138,7 @@ export class LinkwardenService implements BookmarkManagerService {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
+          credentials: "omit",
         },
       );
       const data: FetchLinksResponse = await response.json();
@@ -197,6 +200,7 @@ export class LinkwardenService implements BookmarkManagerService {
         headers: {
           Authorization: `Bearer ${this.token}`,
         },
+        credentials: "omit",
       });
       const data: FetchTagsResponse = await response.json();
       if(response.status !== 200) {
@@ -219,6 +223,7 @@ export class LinkwardenService implements BookmarkManagerService {
           Authorization: `Bearer ${this.token}`,
           'Content-Type': 'application/json',
         },
+        credentials: "omit",
         body: JSON.stringify(request),
       });
       const data = await response.json();
@@ -239,6 +244,7 @@ export class LinkwardenService implements BookmarkManagerService {
         headers: {
           Authorization: `Bearer ${this.token}`,
         },
+        credentials: "omit",
       });
       const data = await response.json();
       if(response.status !== 200) {
@@ -263,6 +269,7 @@ export class LinkwardenService implements BookmarkManagerService {
           Authorization: `Bearer ${this.token}`,
           'Content-Type': 'application/json',
         },
+        credentials: "omit",
         body: JSON.stringify(request),
       });
       const data = await response.json();
@@ -312,6 +319,7 @@ export class LinkwardenService implements BookmarkManagerService {
           Authorization: `Bearer ${this.token}`,
           'Content-Type': 'application/json',
         },
+        credentials: "omit",
         body: JSON.stringify(request),
       });
       const data = await response.json();
@@ -345,6 +353,7 @@ export class LinkwardenService implements BookmarkManagerService {
           Authorization: `Bearer ${this.token}`,
           'Content-Type': 'application/json',
         },
+        credentials: "omit",
         body: JSON.stringify(request),
       });
       const data = await response.json();
@@ -365,6 +374,7 @@ export class LinkwardenService implements BookmarkManagerService {
         headers: {
           Authorization: `Bearer ${this.token}`,
         },
+        credentials: "omit",
       });
       const data = await response.json();
       if(response.status !== 200) {
