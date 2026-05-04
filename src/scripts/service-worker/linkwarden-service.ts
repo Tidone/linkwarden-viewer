@@ -22,25 +22,30 @@ interface FetchFolderResponse {
 }
 
 interface FetchLinksResponse {
-  response: {
-    id: number;
-    name: string;
-    url: string;
-    importDate?: string;
-    createdAt: string;
-    tags: {
+  data:{
+    nextCursor: number;
+    links: {
       id: number;
       name: string;
+      url: string;
+      importDate?: string;
+      createdAt: string;
+      tags: {
+        id: number;
+        name: string;
+      }[];
+      collection: FetchFolderInfo;
     }[];
-    collection: FetchFolderInfo;
-  }[];
+  };
 }
 
 interface FetchTagsResponse {
-  response: {
-    id: number;
-    name: string;
-  }[];
+  data: {
+    nextCursor: number;
+    tags: {
+      id: number;
+      name: string;}[];
+  };
 }
 
 interface CreateLinkRequest {
@@ -133,7 +138,7 @@ export class LinkwardenService implements BookmarkManagerService {
   async _fetchLinksWithCursor(collectionId: number, cursor: number): Promise<ApiReturnType<Link[]>> {
     try {
       const response = await fetch(
-        `${this.host}/api/v1/links?cursor=${cursor}&sort=0&collectionId=${collectionId}`,
+        `${this.host}/api/v1/search?cursor=${cursor}&sort=0&collectionId=${collectionId}`,
         {
           headers: {
             Authorization: `Bearer ${this.token}`,
@@ -143,9 +148,9 @@ export class LinkwardenService implements BookmarkManagerService {
       );
       const data: FetchLinksResponse = await response.json();
       if(response.status !== 200) {
-        throw 'Could not fetch links: ' + data.response;
+        throw 'Could not fetch links: ' + data.data;
       }
-      const result: Link[] = data.response.map((value) => ({
+      const result: Link[] = data.data.links.map((value) => ({
         id: value.id,
         name: value.name,
         url: value.url,
@@ -161,7 +166,7 @@ export class LinkwardenService implements BookmarkManagerService {
           color: normalizeColor(value.collection.color)
         })
       }));
-      return {success: true, data: result};
+      return {success: true, data: result, additionalData: data.data.nextCursor};
     } catch (error) {
       console.error('Error fetching links: ', error);
       return {success: false, data: error.message};
@@ -180,10 +185,11 @@ export class LinkwardenService implements BookmarkManagerService {
       }
       allLinks.push(...result.data);
 
-      if(result.data.length == 0) {  // if the cursor is past the last element in the collection, the fetch request will return an empty array
+      cursor = result.additionalData;
+
+      if(cursor == null) {
         break;
       }
-      cursor = result.data.at(-1).id;
 
       if(count++ >= 200) {  // each request will return at most 50 elements
         console.warn("Aborting link fetch after 10000 elements. Consider moving links into subcollections.");
@@ -194,9 +200,9 @@ export class LinkwardenService implements BookmarkManagerService {
     return {success: true, data: allLinks, additionalData: collectionId};
   }
 
-  async fetchTags(): Promise<ApiReturnType<Tag[]>> {
+  async _fetchTagsWithCursor(cursor: number): Promise<ApiReturnType<Tag[]>> {
     try {
-      const response = await fetch(`${this.host}/api/v1/tags`, {
+      const response = await fetch(`${this.host}/api/v1/tags?cursor=${cursor}&sort=0`, {
         headers: {
           Authorization: `Bearer ${this.token}`,
         },
@@ -204,14 +210,41 @@ export class LinkwardenService implements BookmarkManagerService {
       });
       const data: FetchTagsResponse = await response.json();
       if(response.status !== 200) {
-        throw 'Could not fetch tags: ' + data.response;
+        throw 'Could not fetch tags: ' + data.data;
       }
-      const result: Tag[] = data.response.map((value) => ({id: value.id, name: value.name}));
-      return {success: true, data: result};
+      const result: Tag[] = data.data.tags.map((value) => ({id: value.id, name: value.name}));
+      return {success: true, data: result, additionalData: data.data.nextCursor};
     } catch (error) {
       console.error('Error fetching tags: ', error);
       return {success: false, data: error.message};
     }
+  }
+
+  async fetchTags(): Promise<ApiReturnType<Tag[]>> {
+    let cursor = 0;
+    let count = 0;
+    const allTags: Tag[] = [];
+
+     while(true) {
+      const result = await this._fetchTagsWithCursor(cursor);
+      if (!result.success) {
+        return {success: false, data: result.data};
+      }
+      allTags.push(...result.data);
+
+      cursor = result.additionalData;
+
+      if(cursor == null) {
+        break;
+      }
+
+      if(count++ >= 200) {  // each request will return at most 50 elements
+        console.warn("Aborting link fetch after 10000 elements. Consider moving links into subcollections.");
+        break;
+      }
+    }
+
+    return {success: true, data: allTags};
   }
 
   async saveLink(link: NewLink): Promise<ApiReturnType<any>> {

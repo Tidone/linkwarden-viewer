@@ -115,7 +115,7 @@ export const LinkItem = ({
         </div>
       )}
       {!showConfirmDelete && canShowOverlayButtons &&(
-        <div className='absolute top-0 right-0 z-1 h-full flex'>
+        <div className='absolute top-0 right-2 z-1 h-full flex'>
           <div className='m-auto space-x-2'>
             <button
             onClick={() => showEditLinkModal({
